@@ -15,14 +15,17 @@
 
   <style>
     :root {
-      --ink: #17283f;
-      --blue: #1f5f9e;
-      --teal: #087d7c;
-      --gold: #c48312;
-      --purple: #7a4fa3;
-      --paper: #f7f5ef;
-      --line: #d9d4c9;
-      --muted: #657082;
+      --ink: #1d4033;
+      --blue: #167fb9;
+      --teal: #477d38;
+      --gold: #e9a51c;
+      --purple: #a83273;
+      --red: #d84242;
+      --orange: #e4752e;
+      --paper: #fff8ec;
+      --line: #cbbba4;
+      --muted: #667263;
+      --white: #fffef9;
     }
 
     * { box-sizing: border-box; }
@@ -42,7 +45,7 @@
 
     header {
       border-bottom: 1px solid var(--line);
-      background: rgba(247, 245, 239, .95);
+      background: rgba(255, 248, 236, .95);
     }
 
     .topbar {
@@ -69,6 +72,7 @@
       border: 2px solid var(--teal);
       border-radius: 50%;
       color: var(--teal);
+      background: var(--white);
       font-size: 1.25rem;
     }
 
@@ -80,9 +84,10 @@
 
     .brand small {
       display: block;
-      color: var(--muted);
+      color: var(--teal);
       font-family: Arial, sans-serif;
       font-size: .75rem;
+      font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
     }
@@ -106,13 +111,15 @@
 
     nav a:hover,
     button:hover {
-      color: var(--teal);
+      color: var(--purple);
     }
 
     #language {
       padding: .35rem .6rem;
-      border: 1px solid var(--line);
+      border: 1px solid var(--teal);
       border-radius: 4px;
+      color: var(--teal);
+      background: var(--white);
     }
 
     .hero {
@@ -121,11 +128,11 @@
 
       background-image:
         linear-gradient(
-          rgba(247, 245, 239, .80),
-          rgba(247, 245, 239, .80)
+          rgba(255, 248, 236, .80),
+          rgba(255, 248, 236, .80)
         ),
-        radial-gradient(circle at 80% 12%, rgba(8, 125, 124, .10), transparent 23rem),
-        radial-gradient(circle at 9% 93%, rgba(196, 131, 18, .08), transparent 20rem),
+        radial-gradient(circle at 80% 12%, rgba(71, 125, 56, .13), transparent 23rem),
+        radial-gradient(circle at 9% 93%, rgba(233, 165, 28, .13), transparent 20rem),
         url("hero-peru.jpeg");
 
       background-size: cover;
@@ -152,6 +159,7 @@
     h1 {
       max-width: 860px;
       margin: 0;
+      color: var(--ink);
       font-size: clamp(2.8rem, 7vw, 5.6rem);
       font-weight: normal;
       letter-spacing: -.04em;
@@ -160,7 +168,7 @@
     .hero p:not(.eyebrow) {
       max-width: 690px;
       margin: 1.5rem 0 0;
-      color: #3d495a;
+      color: #3f5d4a;
       font-size: 1.25rem;
     }
 
@@ -181,6 +189,7 @@
 
     h2 {
       margin: 0;
+      color: var(--ink);
       font-size: clamp(2rem, 4vw, 3.1rem);
       font-weight: normal;
       letter-spacing: -.03em;
@@ -197,19 +206,25 @@
       gap: 1.25rem;
     }
 
-    /* Animated note cards */
+    /* Cards inspired by Peruvian floral embroidery */
     .card {
-      --lamp-one: rgba(31, 95, 158, .42);
-      --lamp-two: rgba(8, 125, 124, .30);
+      --card-border: var(--blue);
+      --card-ink: #17638d;
+      --lamp-one: rgba(22, 127, 185, .44);
+      --lamp-two: rgba(71, 125, 56, .30);
 
       position: relative;
       isolation: isolate;
       overflow: hidden;
       min-height: 260px;
       padding: 1.7rem;
-      border: 1px solid var(--line);
-      border-top: 4px solid white;
-      background: #fffdf8;
+      border: 2px solid var(--card-border);
+      border-top: 6px solid var(--white);
+      border-radius: 10px;
+      background: var(--white);
+      box-shadow:
+        inset 0 0 0 3px rgba(255, 248, 236, .95),
+        0 7px 18px rgba(71, 58, 39, .08);
     }
 
     .card::before {
@@ -236,7 +251,7 @@
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      background: rgba(255, 253, 248, .57);
+      background: rgba(255, 254, 249, .57);
     }
 
     .card > * {
@@ -245,18 +260,24 @@
     }
 
     .card:nth-child(2) {
-      --lamp-one: rgba(8, 125, 124, .46);
-      --lamp-two: rgba(31, 95, 158, .28);
+      --card-border: var(--teal);
+      --card-ink: #356b2e;
+      --lamp-one: rgba(71, 125, 56, .48);
+      --lamp-two: rgba(233, 165, 28, .34);
     }
 
     .card:nth-child(3) {
-      --lamp-one: rgba(196, 131, 18, .46);
-      --lamp-two: rgba(241, 204, 125, .36);
+      --card-border: var(--gold);
+      --card-ink: #a96808;
+      --lamp-one: rgba(233, 165, 28, .48);
+      --lamp-two: rgba(228, 117, 46, .38);
     }
 
     .card:nth-child(4) {
-      --lamp-one: rgba(122, 79, 163, .46);
-      --lamp-two: rgba(194, 153, 222, .33);
+      --card-border: var(--purple);
+      --card-ink: #8b205d;
+      --lamp-one: rgba(168, 50, 115, .45);
+      --lamp-two: rgba(216, 66, 66, .34);
     }
 
     @keyframes lava-lamp {
@@ -274,14 +295,16 @@
     }
 
     .card .number {
-      color: var(--muted);
+      color: var(--card-border);
       font-family: Arial, sans-serif;
       font-size: .77rem;
+      font-weight: 700;
       letter-spacing: .12em;
     }
 
     .card h3 {
       margin: .7rem 0;
+      color: var(--card-ink);
       font-size: 1.6rem;
       font-weight: normal;
     }
@@ -292,29 +315,35 @@
     }
 
     .card h3 a:hover {
-      color: var(--teal);
+      color: var(--red);
     }
 
     .card p {
-      color: var(--muted);
+      color: #445e4b;
     }
 
     .card > a {
-      color: var(--blue);
+      color: var(--card-ink);
       font-family: Arial, sans-serif;
       font-size: .9rem;
       font-weight: 700;
+    }
+
+    .card > a:hover {
+      color: var(--red);
     }
 
     .tag {
       display: inline-block;
       margin-top: .6rem;
       padding: .18rem .5rem;
-      color: var(--teal);
-      border: 1px solid #abd0ce;
+      color: var(--card-ink);
+      border: 1px solid var(--card-border);
       border-radius: 999px;
+      background: rgba(255, 254, 249, .75);
       font-family: Arial, sans-serif;
       font-size: .72rem;
+      font-weight: 700;
     }
 
     .about {
@@ -326,25 +355,28 @@
     }
 
     .about p {
-      color: #485467;
+      color: #3f5d4a;
       font-size: 1.08rem;
     }
 
     .callout {
       padding: 1.8rem;
-      border-left: 4px solid var(--teal);
-      background: #e8f2f1;
+      border-left: 5px solid var(--red);
+      border-radius: 0 8px 8px 0;
+      background: #f9e8e1;
+      color: #613a35;
     }
 
     .callout strong {
       display: block;
       margin-bottom: .45rem;
+      color: #9b263f;
       font-family: Arial, sans-serif;
     }
 
     footer {
       padding: 2.2rem 0;
-      color: #6e7580;
+      color: #61705e;
       border-top: 1px solid var(--line);
       font-family: Arial, sans-serif;
       font-size: .84rem;
@@ -556,7 +588,7 @@
       </div>
     </section>
 
-    <section id="seminarios" style="background:#edf3f8;">
+    <section id="seminarios" style="background:#f5f5e9;">
       <div class="shell">
         <div class="section-heading">
           <h2><span class="es">Seminarios</span><span class="en">Seminars</span></h2>
