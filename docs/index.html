@@ -116,22 +116,22 @@
     }
 
     .hero {
-  padding: 6rem 0 4.8rem;
-  border-bottom: 1px solid var(--line);
+      padding: 6rem 0 4.8rem;
+      border-bottom: 1px solid var(--line);
 
-  background-image:
-    linear-gradient(
-      rgba(247, 245, 239, .70),
-      rgba(247, 245, 239, .70)
-    ),
-    radial-gradient(circle at 80% 12%, rgba(8, 125, 124, .10), transparent 23rem),
-    radial-gradient(circle at 9% 93%, rgba(196, 131, 18, .08), transparent 20rem),
-    url("hero-peru.jpeg");
+      background-image:
+        linear-gradient(
+          rgba(247, 245, 239, .70),
+          rgba(247, 245, 239, .70)
+        ),
+        radial-gradient(circle at 80% 12%, rgba(8, 125, 124, .10), transparent 23rem),
+        radial-gradient(circle at 9% 93%, rgba(196, 131, 18, .08), transparent 20rem),
+        url("hero-peru.jpeg");
 
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
 
     .eyebrow {
       margin: 0 0 1rem;
@@ -197,24 +197,80 @@
       gap: 1.25rem;
     }
 
+    /* Animated note cards */
     .card {
+      --lamp-one: rgba(31, 95, 158, .42);
+      --lamp-two: rgba(8, 125, 124, .30);
+
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
       min-height: 260px;
       padding: 1.7rem;
       border: 1px solid var(--line);
-      border-top: 4px solid var(--blue);
+      border-top: 4px solid white;
       background: #fffdf8;
     }
 
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -35%;
+      z-index: 0;
+      opacity: .95;
+      filter: blur(20px);
+      pointer-events: none;
+
+      background:
+        radial-gradient(circle at 22% 22%, var(--lamp-one) 0 10%, transparent 26%),
+        radial-gradient(circle at 75% 28%, var(--lamp-two) 0 13%, transparent 30%),
+        radial-gradient(circle at 42% 78%, var(--lamp-one) 0 9%, transparent 25%),
+        radial-gradient(circle at 82% 80%, var(--lamp-two) 0 11%, transparent 29%);
+
+      animation: lava-lamp 16s ease-in-out infinite alternate;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: rgba(255, 253, 248, .57);
+    }
+
+    .card > * {
+      position: relative;
+      z-index: 2;
+    }
+
     .card:nth-child(2) {
-      border-top-color: var(--teal);
+      --lamp-one: rgba(8, 125, 124, .46);
+      --lamp-two: rgba(31, 95, 158, .28);
     }
 
     .card:nth-child(3) {
-      border-top-color: var(--gold);
+      --lamp-one: rgba(196, 131, 18, .46);
+      --lamp-two: rgba(241, 204, 125, .36);
     }
 
     .card:nth-child(4) {
-      border-top-color: var(--purple);
+      --lamp-one: rgba(122, 79, 163, .46);
+      --lamp-two: rgba(194, 153, 222, .33);
+    }
+
+    @keyframes lava-lamp {
+      0% {
+        transform: translate(-5%, -4%) scale(1);
+      }
+
+      50% {
+        transform: translate(6%, 5%) scale(1.14) rotate(8deg);
+      }
+
+      100% {
+        transform: translate(-2%, 10%) scale(.98) rotate(-6deg);
+      }
     }
 
     .card .number {
@@ -333,6 +389,12 @@
 
       .about {
         gap: 1.4rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card::before {
+        animation: none;
       }
     }
   </style>
