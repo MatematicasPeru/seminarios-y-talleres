@@ -19,6 +19,7 @@
       --blue: #1f5f9e;
       --teal: #087d7c;
       --gold: #c48312;
+      --purple: #7a4fa3;
       --paper: #f7f5ef;
       --line: #d9d4c9;
       --muted: #657082;
@@ -86,9 +87,14 @@
       text-transform: uppercase;
     }
 
-    nav { display: flex; align-items: center; gap: 1.1rem; }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+    }
 
-    nav a, button {
+    nav a,
+    button {
       color: var(--ink);
       background: none;
       border: 0;
@@ -98,7 +104,10 @@
       cursor: pointer;
     }
 
-    nav a:hover, button:hover { color: var(--teal); }
+    nav a:hover,
+    button:hover {
+      color: var(--teal);
+    }
 
     #language {
       padding: .35rem .6rem;
@@ -110,8 +119,8 @@
       padding: 6rem 0 4.8rem;
       border-bottom: 1px solid var(--line);
       background:
-        radial-gradient(circle at 80% 12%, rgba(8,125,124,.12), transparent 23rem),
-        radial-gradient(circle at 9% 93%, rgba(196,131,18,.10), transparent 20rem);
+        radial-gradient(circle at 80% 12%, rgba(8, 125, 124, .12), transparent 23rem),
+        radial-gradient(circle at 9% 93%, rgba(196, 131, 18, .10), transparent 20rem);
     }
 
     .eyebrow {
@@ -124,7 +133,11 @@
       text-transform: uppercase;
     }
 
-    h1, h2, h3 { line-height: 1.15; }
+    h1,
+    h2,
+    h3 {
+      line-height: 1.15;
+    }
 
     h1 {
       max-width: 860px;
@@ -147,7 +160,9 @@
       font-size: 1.3rem;
     }
 
-    section { padding: 4.7rem 0; }
+    section {
+      padding: 4.7rem 0;
+    }
 
     .section-heading {
       max-width: 680px;
@@ -161,11 +176,14 @@
       letter-spacing: -.03em;
     }
 
-    .section-heading p { color: var(--muted); margin: .8rem 0 0; }
+    .section-heading p {
+      color: var(--muted);
+      margin: .8rem 0 0;
+    }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 1.25rem;
     }
 
@@ -177,8 +195,17 @@
       background: #fffdf8;
     }
 
-    .card:nth-child(2) { border-top-color: var(--teal); }
-    .card:nth-child(3) { border-top-color: var(--gold); }
+    .card:nth-child(2) {
+      border-top-color: var(--teal);
+    }
+
+    .card:nth-child(3) {
+      border-top-color: var(--gold);
+    }
+
+    .card:nth-child(4) {
+      border-top-color: var(--purple);
+    }
 
     .card .number {
       color: var(--muted);
@@ -193,7 +220,25 @@
       font-weight: normal;
     }
 
-    .card p { color: var(--muted); }
+    .card h3 a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .card h3 a:hover {
+      color: var(--teal);
+    }
+
+    .card p {
+      color: var(--muted);
+    }
+
+    .card > a {
+      color: var(--blue);
+      font-family: Arial, sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+    }
 
     .tag {
       display: inline-block;
@@ -214,7 +259,10 @@
       border-top: 1px solid var(--line);
     }
 
-    .about p { color: #485467; font-size: 1.08rem; }
+    .about p {
+      color: #485467;
+      font-size: 1.08rem;
+    }
 
     .callout {
       padding: 1.8rem;
@@ -236,18 +284,46 @@
       font-size: .84rem;
     }
 
-    .en { display: none; }
+    .en {
+      display: none;
+    }
 
-    html.english .es { display: none; }
-    html.english .en { display: inline; }
-    html.english .en.block { display: block; }
+    html.english .es {
+      display: none;
+    }
+
+    html.english .en {
+      display: inline;
+    }
+
+    @media (max-width: 1050px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
 
     @media (max-width: 760px) {
-      .topbar { padding: .9rem 0; align-items: flex-start; }
-      nav a { display: none; }
-      .hero { padding: 4rem 0 3.5rem; }
-      .grid, .about { grid-template-columns: 1fr; }
-      .about { gap: 1.4rem; }
+      .topbar {
+        padding: .9rem 0;
+        align-items: flex-start;
+      }
+
+      nav a {
+        display: none;
+      }
+
+      .hero {
+        padding: 4rem 0 3.5rem;
+      }
+
+      .grid,
+      .about {
+        grid-template-columns: 1fr;
+      }
+
+      .about {
+        gap: 1.4rem;
+      }
     }
   </style>
 </head>
@@ -255,7 +331,7 @@
 <body>
   <header>
     <div class="shell topbar">
-      <a class="brand" href="#">
+      <a class="brand" href="index.html">
         <span class="mark">𝕄</span>
         <span>
           <strong>Talleres Matemáticos<br>y Seminarios UNI</strong>
@@ -268,7 +344,7 @@
         <a href="#talleres"><span class="es">Talleres</span><span class="en">Workshops</span></a>
         <a href="#seminarios"><span class="es">Seminarios</span><span class="en">Seminars</span></a>
         <a href="#acerca"><span class="es">Acerca de</span><span class="en">About</span></a>
-        <button id="language" type="button">ES / EN</button>
+        <button id="language" type="button" aria-label="Cambiar idioma">ES / EN</button>
       </nav>
     </div>
   </header>
@@ -304,6 +380,7 @@
       <div class="shell">
         <div class="section-heading">
           <h2><span class="es">Notas</span><span class="en">Notes</span></h2>
+
           <p>
             <span class="es">Apuntes en LaTeX, disponibles para leer en línea, descargar como PDF y mejorar colectivamente.</span>
             <span class="en">LaTeX notes available to read online, download as PDF, and improve collectively.</span>
@@ -313,67 +390,92 @@
         <div class="grid">
           <article class="card">
             <div class="number">01 / NOTES</div>
-            <h3><span class="es">Teoría de la medida</span><span class="en">Measure theory</span></h3>
-            <p><span class="es">Medida de Lebesgue, integración y análisis real.</span><span class="en">Lebesgue measure, integration, and real analysis.</span></p>
-            <span class="tag"><span class="es">Próximamente</span><span class="en">Coming soon</span></span>
+
+            <h3>
+              <span class="es">Teoría de la medida</span>
+              <span class="en">Measure theory</span>
+            </h3>
+
+            <p>
+              <span class="es">Medida de Lebesgue, integración y análisis real.</span>
+              <span class="en">Lebesgue measure, integration, and real analysis.</span>
+            </p>
+
+            <span class="tag">
+              <span class="es">Próximamente</span>
+              <span class="en">Coming soon</span>
+            </span>
           </article>
 
           <article class="card">
             <div class="number">02 / NOTES</div>
+
             <h3>
-  <a href="notas/campos-locales.html" style="color: inherit; text-decoration: none;">
-    <span class="es">Campos locales</span>
-    <span class="en">Local fields</span>
-  </a>
-</h3>
-            <p><span class="es">Valuaciones, ramificación y extensiones $p$-ádicas.</span><span class="en">Valuations, ramification, and $p$-adic extensions.</span></p>
+              <a href="notas/campos-locales.html">
+                <span class="es">Campos locales</span>
+                <span class="en">Local fields</span>
+              </a>
+            </h3>
+
+            <p>
+              <span class="es">Valuaciones, ramificación y extensiones $p$-ádicas.</span>
+              <span class="en">Valuations, ramification, and $p$-adic extensions.</span>
+            </p>
+
             <a href="notas/campos-locales.html">
-  <span class="es">Leer las notas →</span>
-  <span class="en">Read the notes →</span>
-</a>
+              <span class="es">Leer las notas →</span>
+              <span class="en">Read the notes →</span>
+            </a>
           </article>
 
           <article class="card">
             <div class="number">03 / NOTES</div>
-            <h3><span class="es">Geometría algebraica</span><span class="en">Algebraic geometry</span></h3>
-            <p><span class="es">Variedades afines, proyectivas y teoría de esquemas.</span><span class="en">Affine and projective varieties, and scheme theory.</span></p>
-            <span class="tag"><span class="es">Próximamente</span><span class="en">Coming soon</span></span>
+
+            <h3>
+              <span class="es">Geometría algebraica</span>
+              <span class="en">Algebraic geometry</span>
+            </h3>
+
+            <p>
+              <span class="es">Variedades afines, proyectivas y teoría de esquemas.</span>
+              <span class="en">Affine and projective varieties, and scheme theory.</span>
+            </p>
+
+            <span class="tag">
+              <span class="es">Próximamente</span>
+              <span class="en">Coming soon</span>
+            </span>
+          </article>
+
+          <article class="card">
+            <div class="number">04 / NOTES</div>
+
+            <h3>
+              <a href="notas/dessins-denfants.html">Dessins d’enfants</a>
+            </h3>
+
+            <p>
+              <span class="es">Grafos bipartitos, permutaciones, recubrimientos ramificados y pares de Belyi.</span>
+              <span class="en">Bipartite graphs, permutations, ramified covers, and Belyi pairs.</span>
+            </p>
+
+            <a href="notas/dessins-denfants.html">
+              <span class="es">Leer las notas en inglés →</span>
+              <span class="en">Read the notes →</span>
+            </a>
           </article>
         </div>
       </div>
     </section>
 
-    <article class="card">
-  <div class="number">04 / NOTES</div>
-
-  <h3>
-    <a href="notas/dessins-denfants.html"
-       style="color: inherit; text-decoration: none;">
-      Dessins d’enfants
-    </a>
-  </h3>
-
-  <p>
-    <span class="es">
-      Grafos bipartitos, permutaciones, recubrimientos
-      ramificados y pares de Belyi.
-    </span>
-    <span class="en">
-      Bipartite graphs, permutations, ramified covers,
-      and Belyi pairs.
-    </span>
-  </p>
-
-  <a href="notas/dessins-denfants.html">
-    <span class="es">Leer las notas en inglés →</span>
-    <span class="en">Read the notes →</span>
-  </a>
-</article>
-
     <section id="talleres">
       <div class="shell">
         <div class="section-heading">
-          <h2><span class="es">Talleres y grupos de estudio</span><span class="en">Workshops and study groups</span></h2>
+          <h2>
+            <span class="es">Talleres y grupos de estudio</span>
+            <span class="en">Workshops and study groups</span>
+          </h2>
+
           <p>
             <span class="es">Cada grupo tendrá una página con programa, material, ejercicios, diapositivas y enlaces a las grabaciones.</span>
             <span class="en">Each group will have a page with a syllabus, materials, exercises, slides, and recording links.</span>
@@ -386,6 +488,7 @@
       <div class="shell">
         <div class="section-heading">
           <h2><span class="es">Seminarios</span><span class="en">Seminars</span></h2>
+
           <p>
             <span class="es">Un archivo abierto de charlas: expositor, resumen, referencias y video cuando exista.</span>
             <span class="en">An open archive of talks: speaker, abstract, references, and video when available.</span>
@@ -396,7 +499,11 @@
 
     <section id="acerca" class="about shell">
       <div>
-        <h2><span class="es">Una casa digital para aprender.</span><span class="en">A digital home for learning.</span></h2>
+        <h2>
+          <span class="es">Una casa digital para aprender.</span>
+          <span class="en">A digital home for learning.</span>
+        </h2>
+
         <p>
           <span class="es">Queremos preservar el trabajo serio de los grupos de estudio y hacerlo accesible para estudiantes dentro y fuera del Perú.</span>
           <span class="en">We want to preserve the serious work of study groups and make it accessible to students in and beyond Peru.</span>
@@ -404,7 +511,11 @@
       </div>
 
       <aside class="callout">
-        <strong><span class="es">Nota institucional</span><span class="en">Institutional note</span></strong>
+        <strong>
+          <span class="es">Nota institucional</span>
+          <span class="en">Institutional note</span>
+        </strong>
+
         <span class="es">Esta es una iniciativa independiente organizada por estudiantes; no es un sitio oficial de la Universidad Nacional de Ingeniería.</span>
         <span class="en">This is an independent student-led initiative; it is not an official website of the National University of Engineering.</span>
       </aside>
