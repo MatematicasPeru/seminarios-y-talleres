@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campos locales | Talleres Matemáticos y Seminarios UNI</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --ink: #17283f;
+      --blue: #1f5f9e;
+      --teal: #087d7c;
+      --paper: #f7f5ef;
+      --line: #d9d4c9;
+      --muted: #657082;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.7;
+    }
+
+    a { color: var(--blue); }
+
+    .shell {
+      width: min(1100px, calc(100% - 2.5rem));
+      margin: auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(247,245,239,.97);
+    }
+
+    .topbar {
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 1.05rem;
+      font-weight: bold;
+    }
+
+    .brand span {
+      color: var(--teal);
+      font-family: Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: normal;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    nav {
+      display: flex;
+      gap: 1.1rem;
+      font-family: Arial, sans-serif;
+      font-size: .85rem;
+    }
+
+    nav a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    nav a:hover { color: var(--teal); }
+
+    .breadcrumb {
+      padding: 2.5rem 0 1rem;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: .82rem;
+    }
+
+    .breadcrumb a { color: var(--muted); }
+
+    .hero {
+      padding: .8rem 0 3rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      margin: 0 0 .8rem;
+      color: var(--teal);
+      font-family: Arial, sans-serif;
+      font-size: .76rem;
+      font-weight: bold;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3 { line-height: 1.2; }
+
+    h1 {
+      max-width: 850px;
+      margin: 0;
+      font-size: clamp(2.7rem, 6vw, 4.8rem);
+      font-weight: normal;
+      letter-spacing: -.04em;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 1rem 0 0;
+      color: #4b5667;
+      font-size: 1.18rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .65rem;
+      margin-top: 1.6rem;
+      font-family: Arial, sans-serif;
+      font-size: .8rem;
+    }
+
+    .tag {
+      padding: .28rem .65rem;
+      color: var(--teal);
+      border: 1px solid #a9d2ce;
+      border-radius: 999px;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 4rem;
+      padding: 4rem 0 5rem;
+    }
+
+    article { max-width: 730px; }
+
+    h2 {
+      margin: 2.8rem 0 .7rem;
+      font-size: 2rem;
+      font-weight: normal;
+    }
+
+    h3 {
+      margin: 1.8rem 0 .45rem;
+      font-size: 1.35rem;
+    }
+
+    .definition {
+      margin: 1.6rem 0;
+      padding: 1.25rem 1.4rem;
+      border-left: 4px solid var(--teal);
+      background: #e8f2f1;
+    }
+
+    .definition strong {
+      display: block;
+      margin-bottom: .35rem;
+      font-family: Arial, sans-serif;
+      font-size: .82rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .note {
+      margin: 1.5rem 0;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid var(--line);
+      background: #fffdf8;
+    }
+
+    aside {
+      align-self: start;
+      position: sticky;
+      top: 1rem;
+      padding: 1.3rem;
+      border-top: 4px solid var(--blue);
+      background: #fffdf8;
+      font-family: Arial, sans-serif;
+      font-size: .9rem;
+    }
+
+    aside h2 {
+      margin: 0 0 .8rem;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.45rem;
+    }
+
+    aside ol {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    aside li { margin: .55rem 0; }
+
+    aside a {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    aside a:hover { color: var(--teal); }
+
+    table {
+      width: 100%;
+      margin: 1.3rem 0;
+      border-collapse: collapse;
+      font-size: .95rem;
+    }
+
+    th, td {
+      padding: .8rem;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: .76rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    footer {
+      padding: 2rem 0;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-family: Arial, sans-serif;
+      font-size: .84rem;
+    }
+
+    @media (max-width: 760px) {
+      nav { display: none; }
+      main { grid-template-columns: 1fr; gap: 2rem; }
+      aside { position: static; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="shell topbar">
+      <a class="brand" href="../index.html">
+        Talleres Matemáticos y Seminarios UNI<br>
+        <span>Matemáticas Perú</span>
+      </a>
+
+      <nav>
+        <a href="../index.html#notas">Notas</a>
+        <a href="../index.html#talleres">Talleres</a>
+        <a href="../index.html#seminarios">Seminarios</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="shell breadcrumb">
+    <a href="../index.html">Inicio</a> / Notas / Campos locales
+  </div>
+
+  <section class="hero">
+    <div class="shell">
+      <p class="eyebrow">Grupo de estudio · Nota piloto</p>
+      <h1>Campos locales</h1>
+      <p class="subtitle">
+        Una introducción a valuaciones discretas, anillos de enteros,
+        extensiones finitas, ramificación y campos $p$-ádicos.
+      </p>
+
+      <div class="meta">
+        <span class="tag">Álgebra y teoría de números</span>
+        <span class="tag">Nivel: maestría / avanzado</span>
+        <span class="tag">Idioma principal: español</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="shell">
+    <article>
+      <h2 id="inicio">Propósito</h2>
+
+      <p>
+        Estas notas acompañan un grupo de estudio sobre campos locales.
+        La idea es partir de una valuación y llegar, de manera concreta,
+        a la estructura aritmética de una extensión finita $L/K$.
+      </p>
+
+      <div class="note">
+        <strong>Lectura central.</strong>
+        Jean-Pierre Serre, <em>Local Fields</em>. Las referencias y las
+        grabaciones de cada sesión se añadirán a esta página.
+      </div>
+
+      <h2 id="valuaciones">1. Valuaciones discretas</h2>
+
+      <p>
+        Sea $K$ un cuerpo. Una valuación discreta normalizada es una función
+        \[
+          v:K^\times \longrightarrow \mathbb{Z}
+        \]
+        que satisface
+        \[
+          v(xy)=v(x)+v(y),
+          \qquad
+          v(x+y)\geq \min\{v(x),v(y)\}.
+        \]
+        Extendemos la definición con $v(0)=\infty$.
+      </p>
+
+      <div class="definition">
+        <strong>Anillo de valuación</strong>
+        El anillo de enteros de $K$ es
+        \[
+          \mathcal{O}_K=\{x\in K:v(x)\geq0\}.
+        \]
+        Su ideal maximal es
+        \[
+          \mathfrak{m}_K=\{x\in K:v(x)>0\},
+        \]
+        y el cuerpo residual es $k_K=\mathcal{O}_K/\mathfrak{m}_K$.
+      </div>
+
+      <p>
+        Si $\pi\in K$ satisface $v(\pi)=1$, se llama un
+        <em>uniformizante</em>. Todo $x\in K^\times$ admite una
+        descomposición
+        \[
+          x=\pi^{v(x)}u,
+          \qquad
+          u\in\mathcal{O}_K^\times.
+        \]
+        Por tanto,
+        \[
+          K^\times\simeq \pi^{\mathbb{Z}}\times\mathcal{O}_K^\times.
+        \]
+      </p>
+
+      <h2 id="extensiones">2. Extensiones finitas</h2>
+
+      <p>
+        Para una extensión finita de campos locales $L/K$, la valuación de
+        $K$ se extiende de forma única a $L$. Aparecen entonces dos invariantes:
+      </p>
+
+      <div class="definition">
+        <strong>Índice de ramificación y grado residual</strong>
+        \[
+          e(L/K)=v_L(\pi_K),
+          \qquad
+          f(L/K)=[k_L:k_K].
+        \]
+        El teorema fundamental afirma:
+        \[
+          [L:K]=e(L/K)f(L/K).
+        \]
+      </div>
+
+      <p>
+        Una extensión es <em>no ramificada</em> cuando $e(L/K)=1$ y es
+        <em>totalmente ramificada</em> cuando $f(L/K)=1$.
+      </p>
+
+      <h2 id="sesiones">Sesiones y grabaciones</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Sesión</th>
+            <th>Tema</th>
+            <th>Material</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01</td>
+            <td>Valuaciones, $\mathcal{O}_K$ y uniformizantes</td>
+            <td>Notas y grabación: próximamente</td>
+          </tr>
+          <tr>
+            <td>02</td>
+            <td>Extensiones finitas, $e(L/K)$ y $f(L/K)$</td>
+            <td>Notas y grabación: próximamente</td>
+          </tr>
+          <tr>
+            <td>03</td>
+            <td>Hensel, Eisenstein y ramificación</td>
+            <td>Notas y grabación: próximamente</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note">
+        <strong>Proyecto abierto.</strong>
+        Esta página es la plantilla inicial. Cada sesión podrá incluir su
+        PDF, archivo fuente en LaTeX, hoja de problemas, diapositivas,
+        referencias y enlace a la grabación.
+      </p>
+    </article>
+
+    <aside>
+      <h2>Contenido</h2>
+      <ol>
+        <li><a href="#inicio">Propósito</a></li>
+        <li><a href="#valuaciones">Valuaciones discretas</a></li>
+        <li><a href="#extensiones">Extensiones finitas</a></li>
+        <li><a href="#sesiones">Sesiones y grabaciones</a></li>
+      </ol>
+
+      <hr style="border:0;border-top:1px solid #d9d4c9;margin:1.4rem 0;">
+
+      <strong>English</strong>
+      <p>
+        A study-group archive on local fields, including notes,
+        problem sheets, slides, references, and recordings.
+      </p>
+    </aside>
+  </main>
+
+  <footer>
+    <div class="shell">
+      © 2026 Talleres Matemáticos y Seminarios UNI ·
+      Iniciativa independiente organizada por estudiantes.
+    </div>
+  </footer>
+</body>
+</html>
