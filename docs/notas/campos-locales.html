@@ -142,9 +142,6 @@
     .button:hover { border-color: var(--blue); color: var(--white); background: var(--blue); }
 
     .viewer {
-      overflow: hidden;
-      height: min(78vh, 1000px);
-      min-height: 620px;
       border: 1px solid var(--line);
       border-top: 6px solid var(--teal);
       border-radius: 8px;
@@ -152,7 +149,49 @@
       box-shadow: 0 8px 28px rgba(71, 58, 39, .12);
     }
 
-    .viewer iframe { width: 100%; height: 100%; border: 0; background: #e7e5df; }
+    .viewer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--white);
+      font-family: Arial, sans-serif;
+      font-size: .84rem;
+    }
+
+    .pdf-pages {
+      padding: 1.4rem;
+      background: #d9d7d0;
+    }
+
+    .pdf-page {
+      display: grid;
+      place-items: center;
+      max-width: 940px;
+      min-height: 160px;
+      margin: 0 auto 1.25rem;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: 0 3px 12px rgba(39, 35, 28, .18);
+    }
+
+    .pdf-page:last-child { margin-bottom: 0; }
+
+    .pdf-page canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .loading, .error {
+      padding: 2rem 1rem;
+      color: var(--muted);
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
 
     .fallback {
       margin: 1rem 0 0;
@@ -170,7 +209,7 @@
       .brand strong { font-size: .95rem; }
       .heading { display: block; }
       .actions { margin-top: 1rem; }
-      .viewer { height: 72vh; min-height: 480px; }
+      .pdf-pages { padding: .75rem; }
     }
   </style>
 </head>
@@ -217,12 +256,13 @@
     </div>
 
     <div class="viewer">
-      <iframe
-        title="Local Fields Notes"
-        src="campos-locales.pdf#view=FitH&toolbar=1&navpanes=0"
-      >
-        <p><a href="campos-locales.pdf"><span class="es">Abrir las notas en PDF</span><span class="en">Open the PDF notes</span></a></p>
-      </iframe>
+      <div class="viewer-toolbar">
+        <span id="page-count"><span class="es">Cargando PDF…</span><span class="en">Loading PDF…</span></span>
+        <span><span class="es">Desplázate para leer</span><span class="en">Scroll to read</span></span>
+      </div>
+      <div class="pdf-pages" id="pdf-pages" aria-live="polite">
+        <p class="loading"><span class="es">Preparando las páginas…</span><span class="en">Preparing the pages…</span></p>
+      </div>
     </div>
 
     <p class="fallback">
@@ -231,6 +271,7 @@
     </p>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
   <script>
     function setLanguage(language) {
       document.documentElement.classList.toggle("english", language === "en");
@@ -249,6 +290,95 @@
     });
 
     setLanguage(localStorage.getItem("seminarios-language") || "es");
+
+    // Render pages into the ordinary document flow. This makes scrolling work
+    // on mobile browsers where embedded PDF frames are not reliably scrollable.
+    (function () {
+      const pdfUrl = "campos-locales.pdf";
+      const pages = document.getElementById("pdf-pages");
+      const pageCount = document.getElementById("page-count");
+      const rendered = new Set();
+      let pdf;
+
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      function visibleText(es, en) {
+        return '<span class="es">' + es + '</span><span class="en">' + en + '</span>';
+      }
+
+      async function renderPage(holder) {
+        const pageNumber = Number(holder.dataset.page);
+        if (rendered.has(pageNumber)) return;
+        rendered.add(pageNumber);
+
+        try {
+          const page = await pdf.getPage(pageNumber);
+          const baseViewport = page.getViewport({ scale: 1 });
+          const availableWidth = Math.min(pages.clientWidth - 32, 920);
+          const scale = Math.min(1.45, availableWidth / baseViewport.width);
+          const viewport = page.getViewport({ scale: scale });
+          const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          canvas.width = Math.floor(viewport.width * outputScale);
+          canvas.height = Math.floor(viewport.height * outputScale);
+          canvas.style.width = Math.floor(viewport.width) + "px";
+          canvas.style.height = Math.floor(viewport.height) + "px";
+
+          await page.render({
+            canvasContext: context,
+            viewport: viewport,
+            transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0]
+          }).promise;
+
+          holder.replaceChildren(canvas);
+        } catch (error) {
+          holder.innerHTML = '<p class="error">' + visibleText(
+            "No se pudo cargar esta página.",
+            "This page could not be loaded."
+          ) + '</p>';
+        }
+      }
+
+      async function startReader() {
+        try {
+          pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+          pageCount.innerHTML = visibleText(
+            pdf.numPages + " páginas",
+            pdf.numPages + " pages"
+          );
+
+          pages.replaceChildren();
+          const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) renderPage(entry.target);
+            });
+          }, { rootMargin: "900px 0px" });
+
+          for (let number = 1; number <= pdf.numPages; number += 1) {
+            const holder = document.createElement("div");
+            holder.className = "pdf-page";
+            holder.dataset.page = number;
+            holder.innerHTML = '<p class="loading">' + visibleText(
+              "Página " + number,
+              "Page " + number
+            ) + '</p>';
+            pages.appendChild(holder);
+            observer.observe(holder);
+          }
+        } catch (error) {
+          pageCount.innerHTML = visibleText("PDF no disponible", "PDF unavailable");
+          pages.innerHTML = '<p class="error">' + visibleText(
+            'El visor no pudo cargar el PDF. Usa <a href="campos-locales.pdf">Abrir PDF</a>.',
+            'The viewer could not load the PDF. Use <a href="campos-locales.pdf">Open PDF</a>.'
+          ) + '</p>';
+        }
+      }
+
+      startReader();
+    }());
   </script>
 </body>
 </html>
