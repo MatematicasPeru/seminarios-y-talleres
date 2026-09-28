@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Notas de teoría de la medida en PDF.">
+  <title>Teoría de la medida | Talleres Matemáticos y Seminarios UNI</title>
+
+  <style>
+    :root {
+      --ink: #1d4033;
+      --teal: #477d38;
+      --blue: #167fb9;
+      --paper: #fff8ec;
+      --white: #fffef9;
+      --line: #cbbba4;
+      --muted: #667263;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.6;
+    }
+
+    .shell {
+      width: min(1500px, calc(100% - 2.5rem));
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 248, 236, .96);
+    }
+
+    .topbar {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.2rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--teal);
+      border-radius: 50%;
+      color: var(--teal);
+      background: var(--white);
+      font-size: 1.25rem;
+    }
+
+    .brand strong { display: block; font-size: 1.05rem; line-height: 1.2; }
+    .brand small {
+      display: block;
+      color: var(--teal);
+      font-family: Arial, sans-serif;
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .language { display: flex; gap: .35rem; }
+
+    .language button {
+      padding: .38rem .62rem;
+      border: 1px solid var(--teal);
+      border-radius: 4px;
+      color: var(--teal);
+      background: var(--white);
+      font-family: Arial, sans-serif;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .language button.active { color: var(--white); background: var(--teal); }
+
+    main { padding: 2.7rem 0 3.5rem; }
+
+    .breadcrumb {
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: .92rem;
+    }
+
+    .breadcrumb a { color: inherit; }
+
+    .heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 2rem;
+      margin: 1.15rem 0 1.7rem;
+    }
+
+    .eyebrow {
+      margin: 0 0 .45rem;
+      color: var(--teal);
+      font-family: Arial, sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 0; font-size: clamp(2.3rem, 5vw, 4rem); font-weight: 400; line-height: 1.1; }
+
+    .actions { display: flex; flex-wrap: wrap; gap: .65rem; }
+
+    .button {
+      display: inline-block;
+      padding: .6rem .85rem;
+      border: 1px solid var(--teal);
+      border-radius: 5px;
+      color: var(--white);
+      background: var(--teal);
+      font-family: Arial, sans-serif;
+      font-size: .88rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .button.secondary { color: var(--teal); background: var(--white); }
+    .button:hover { border-color: var(--blue); color: var(--white); background: var(--blue); }
+
+    .viewer {
+      border: 1px solid var(--line);
+      border-top: 6px solid var(--teal);
+      border-radius: 8px;
+      background: #e7e5df;
+      box-shadow: 0 8px 28px rgba(71, 58, 39, .12);
+    }
+
+    .viewer-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .65rem 1rem;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      background: var(--white);
+      font-family: Arial, sans-serif;
+      font-size: .84rem;
+    }
+
+    .viewer-controls {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .viewer-controls button,
+    .viewer-controls select {
+      min-height: 2rem;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      background: var(--white);
+      font: inherit;
+    }
+
+    .viewer-controls button {
+      width: 2rem;
+      font-size: 1.15rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .viewer-controls button:hover,
+    .viewer-controls select:hover { border-color: var(--teal); color: var(--teal); }
+
+    .viewer-controls select { padding: 0 .35rem; cursor: pointer; }
+
+    .pdf-pages {
+      padding: 1.4rem;
+      overflow-x: auto;
+      background: #d9d7d0;
+    }
+
+    .pdf-page {
+      width: max-content;
+      min-height: 160px;
+      margin: 0 auto 1.25rem;
+      overflow: visible;
+      background: var(--white);
+      box-shadow: 0 3px 12px rgba(39, 35, 28, .18);
+    }
+
+    .pdf-page:last-child { margin-bottom: 0; }
+
+    .pdf-page canvas {
+      display: block;
+      margin: 0 auto;
+      height: auto;
+    }
+
+    .loading, .error {
+      padding: 2rem 1rem;
+      color: var(--muted);
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .fallback {
+      margin: 1rem 0 0;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: .9rem;
+    }
+
+    .en { display: none; }
+    html.english .es { display: none; }
+    html.english .en { display: inline; }
+
+    @media (max-width: 700px) {
+      .topbar { min-height: 68px; }
+      .brand strong { font-size: .95rem; }
+      .heading { display: block; }
+      .actions { margin-top: 1rem; }
+      .viewer-toolbar { align-items: flex-start; flex-wrap: wrap; }
+      .pdf-pages { padding: .75rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="shell topbar">
+      <a class="brand" href="../index.html">
+        <span class="mark">𝕄</span>
+        <span>
+          <strong>Talleres Matemáticos<br>y Seminarios UNI</strong>
+          <small>Matemáticas Perú</small>
+        </span>
+      </a>
+
+      <div class="language" aria-label="Language selector">
+        <button type="button" data-language="es" class="active" aria-pressed="true">ES</button>
+        <button type="button" data-language="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="shell">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../index.html"><span class="es">Inicio</span><span class="en">Home</span></a>
+      / <span class="es">Notas</span><span class="en">Notes</span>
+      / <span class="es">Teoría de la medida</span><span class="en">Measure theory</span>
+    </nav>
+
+    <div class="heading">
+      <div>
+        <p class="eyebrow"><span class="es">Notas en PDF</span><span class="en">PDF notes</span></p>
+        <h1><span class="es">Teoría de la medida</span><span class="en">Measure theory</span></h1>
+      </div>
+
+      <div class="actions">
+        <a class="button" href="teoria-de-la-medida.pdf" target="_blank" rel="noopener">
+          <span class="es">Abrir PDF ↗</span><span class="en">Open PDF ↗</span>
+        </a>
+        <a class="button secondary" href="teoria-de-la-medida.pdf" download>
+          <span class="es">Descargar PDF</span><span class="en">Download PDF</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="viewer">
+      <div class="viewer-toolbar">
+        <div class="viewer-controls" aria-label="PDF zoom controls">
+          <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+          <select id="zoom-level" aria-label="Zoom level">
+            <option value="50">50%</option>
+            <option value="75">75%</option>
+            <option value="90">90%</option>
+            <option value="100" selected>100%</option>
+            <option value="110">110%</option>
+            <option value="125">125%</option>
+            <option value="150">150%</option>
+            <option value="175">175%</option>
+            <option value="200">200%</option>
+          </select>
+          <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+        </div>
+        <span id="page-count"><span class="es">Cargando PDF…</span><span class="en">Loading PDF…</span></span>
+        <span><span class="es">Desplázate para leer</span><span class="en">Scroll to read</span></span>
+      </div>
+      <div class="pdf-pages" id="pdf-pages" aria-live="polite">
+        <p class="loading"><span class="es">Preparando las páginas…</span><span class="en">Preparing the pages…</span></p>
+      </div>
+    </div>
+
+    <p class="fallback">
+      <span class="es">Si el visor no aparece en tu dispositivo, usa «Abrir PDF».</span>
+      <span class="en">If the viewer does not appear on your device, use “Open PDF.”</span>
+    </p>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    function setLanguage(language) {
+      document.documentElement.classList.toggle("english", language === "en");
+      document.documentElement.lang = language;
+      localStorage.setItem("seminarios-language", language);
+
+      document.querySelectorAll("[data-language]").forEach(function (button) {
+        const active = button.dataset.language === language;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", active);
+      });
+    }
+
+    document.querySelectorAll("[data-language]").forEach(function (button) {
+      button.addEventListener("click", function () { setLanguage(button.dataset.language); });
+    });
+
+    setLanguage(localStorage.getItem("seminarios-language") || "es");
+
+    // Render pages into the ordinary document flow. This makes scrolling work
+    // on mobile browsers where embedded PDF frames are not reliably scrollable.
+    (function () {
+      const pdfUrl = "teoria-de-la-medida.pdf";
+      const pages = document.getElementById("pdf-pages");
+      const pageCount = document.getElementById("page-count");
+      const zoomLevel = document.getElementById("zoom-level");
+      const zoomSteps = [50, 75, 90, 100, 110, 125, 150, 175, 200];
+      const rendered = new Set();
+      let pdf;
+      let observer;
+      let zoomPercent = 100;
+      let renderGeneration = 0;
+
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+      function visibleText(es, en) {
+        return '<span class="es">' + es + '</span><span class="en">' + en + '</span>';
+      }
+
+      async function renderPage(holder) {
+        const pageNumber = Number(holder.dataset.page);
+        if (rendered.has(pageNumber)) return;
+        rendered.add(pageNumber);
+        const generation = renderGeneration;
+
+        try {
+          const page = await pdf.getPage(pageNumber);
+          const baseViewport = page.getViewport({ scale: 1 });
+          const availableWidth = Math.min(pages.clientWidth - 32, 920);
+          const fitWidthScale = Math.min(1.45, availableWidth / baseViewport.width);
+          const scale = fitWidthScale * (zoomPercent / 100);
+          const viewport = page.getViewport({ scale: scale });
+          const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+          const canvas = document.createElement("canvas");
+          const context = canvas.getContext("2d");
+
+          canvas.width = Math.floor(viewport.width * outputScale);
+          canvas.height = Math.floor(viewport.height * outputScale);
+          canvas.style.width = Math.floor(viewport.width) + "px";
+          canvas.style.height = Math.floor(viewport.height) + "px";
+
+          await page.render({
+            canvasContext: context,
+            viewport: viewport,
+            transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0]
+          }).promise;
+
+          // Ignore an earlier render that finishes after the zoom has changed.
+          if (generation === renderGeneration) holder.replaceChildren(canvas);
+        } catch (error) {
+          holder.innerHTML = '<p class="error">' + visibleText(
+            "No se pudo cargar esta página.",
+            "This page could not be loaded."
+          ) + '</p>';
+        }
+      }
+
+      function placeholder(holder) {
+        const number = holder.dataset.page;
+        holder.innerHTML = '<p class="loading">' + visibleText(
+          "Página " + number,
+          "Page " + number
+        ) + '</p>';
+      }
+
+      function refreshVisiblePages() {
+        renderGeneration += 1;
+        rendered.clear();
+        document.querySelectorAll(".pdf-page").forEach(function (holder) {
+          placeholder(holder);
+          const rect = holder.getBoundingClientRect();
+          if (rect.bottom > -900 && rect.top < window.innerHeight + 900) {
+            renderPage(holder);
+          }
+        });
+      }
+
+      function setZoom(nextPercent) {
+        zoomPercent = Math.max(50, Math.min(200, nextPercent));
+        zoomLevel.value = String(zoomPercent);
+        localStorage.setItem("seminarios-pdf-zoom", String(zoomPercent));
+        if (pdf) refreshVisiblePages();
+      }
+
+      document.getElementById("zoom-out").addEventListener("click", function () {
+        const index = Math.max(0, zoomSteps.indexOf(zoomPercent) - 1);
+        setZoom(zoomSteps[index]);
+      });
+
+      document.getElementById("zoom-in").addEventListener("click", function () {
+        const index = Math.min(zoomSteps.length - 1, zoomSteps.indexOf(zoomPercent) + 1);
+        setZoom(zoomSteps[index]);
+      });
+
+      zoomLevel.addEventListener("change", function () {
+        setZoom(Number(zoomLevel.value));
+      });
+
+      async function startReader() {
+        try {
+          pdf = await pdfjsLib.getDocument(pdfUrl).promise;
+          pageCount.innerHTML = visibleText(
+            pdf.numPages + " páginas",
+            pdf.numPages + " pages"
+          );
+
+          pages.replaceChildren();
+          observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) renderPage(entry.target);
+            });
+          }, { rootMargin: "900px 0px" });
+
+          for (let number = 1; number <= pdf.numPages; number += 1) {
+            const holder = document.createElement("div");
+            holder.className = "pdf-page";
+            holder.dataset.page = number;
+            placeholder(holder);
+            pages.appendChild(holder);
+            observer.observe(holder);
+          }
+        } catch (error) {
+          pageCount.innerHTML = visibleText("PDF no disponible", "PDF unavailable");
+          pages.innerHTML = '<p class="error">' + visibleText(
+            'El visor no pudo cargar el PDF. Usa <a href="teoria-de-la-medida.pdf">Abrir PDF</a>.',
+            'The viewer could not load the PDF. Use <a href="teoria-de-la-medida.pdf">Open PDF</a>.'
+          ) + '</p>';
+        }
+      }
+
+      const savedZoom = Number(localStorage.getItem("seminarios-pdf-zoom"));
+      if (zoomSteps.includes(savedZoom)) setZoom(savedZoom);
+      startReader();
+    }());
+  </script>
+</body>
+</html>
