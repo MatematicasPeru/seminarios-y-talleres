@@ -192,14 +192,15 @@
 
     .pdf-pages {
       padding: 1.4rem;
+      overflow-x: auto;
       background: #d9d7d0;
     }
 
     .pdf-page {
-      max-width: 940px;
+      width: max-content;
       min-height: 160px;
       margin: 0 auto 1.25rem;
-      overflow: auto;
+      overflow: visible;
       background: var(--white);
       box-shadow: 0 3px 12px rgba(39, 35, 28, .18);
     }
@@ -345,6 +346,7 @@
       let pdf;
       let observer;
       let zoomPercent = 100;
+      let renderGeneration = 0;
 
       pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -357,6 +359,7 @@
         const pageNumber = Number(holder.dataset.page);
         if (rendered.has(pageNumber)) return;
         rendered.add(pageNumber);
+        const generation = renderGeneration;
 
         try {
           const page = await pdf.getPage(pageNumber);
@@ -380,7 +383,8 @@
             transform: outputScale === 1 ? null : [outputScale, 0, 0, outputScale, 0, 0]
           }).promise;
 
-          holder.replaceChildren(canvas);
+          // Ignore an earlier render that finishes after the zoom has changed.
+          if (generation === renderGeneration) holder.replaceChildren(canvas);
         } catch (error) {
           holder.innerHTML = '<p class="error">' + visibleText(
             "No se pudo cargar esta página.",
@@ -398,6 +402,7 @@
       }
 
       function refreshVisiblePages() {
+        renderGeneration += 1;
         rendered.clear();
         document.querySelectorAll(".pdf-page").forEach(function (holder) {
           placeholder(holder);
