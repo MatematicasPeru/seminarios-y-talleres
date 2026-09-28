@@ -1,0 +1,2551 @@
+% COMPLEX ANALYSIS -- THE RISING SEA FORMAT
+% MATH 503, Fall 2025, Lectures 1--21. Proofs intentionally omitted.
+% Compile twice with XeLaTeX or LuaLaTeX.
+\RequirePackage{silence}
+\WarningFilter{xcolor}{Package option}
+\documentclass[10pt,letterpaper,twoside,openright]{amsbook}
+% TYPOGRAPHY AND MATHEMATICS
+\usepackage[no-math]{fontspec}
+\IfFontExistsTF{TeX Gyre Pagella}
+ {\newfontfamily\SeaPhraseFont{TeX Gyre Pagella}}
+ {\newfontfamily\SeaPhraseFont{Latin Modern Roman}}
+\usepackage[T1]{fontenc}
+\usepackage{palatino}
+\renewcommand{\updefault}{n}
+\usepackage{amsmath,amsthm,amssymb,mathtools}
+\usepackage{euler}
+\usepackage{mathrsfs}
+\usepackage{microtype}
+% SMALL CAPS AND LEAD-IN PHRASES
+\providecommand{\smallcaps}[1]{}
+\providecommand{\allcaps}[1]{}
+\renewcommand{\smallcaps}[1]{{\addfontfeatures{Letters=SmallCaps,LetterSpace=4}#1}}
+\renewcommand{\allcaps}[1]{{\addfontfeatures{LetterSpace=8}\MakeUppercase{#1}}}
+\newcommand{\leadphrase}[1]{{\addfontfeatures{Letters=SmallCaps,LetterSpace=4}#1}}
+\AddToHook{cmd/smallcaps/before}{\begingroup\SeaPhraseFont}
+\AddToHook{cmd/smallcaps/after}{\endgroup}
+\AddToHook{cmd/allcaps/before}{\begingroup\SeaPhraseFont}
+\AddToHook{cmd/allcaps/after}{\endgroup}
+\AddToHook{cmd/leadphrase/before}{\begingroup\SeaPhraseFont}
+\AddToHook{cmd/leadphrase/after}{\endgroup}
+% COLORS
+\usepackage{xcolor}
+\definecolor{PageBlack}{HTML}{FFFFFF}
+\definecolor{SoftWhite}{HTML}{464646}
+\definecolor{MathYellow}{HTML}{003496}
+\definecolor{SoftGray}{HTML}{000000}
+\definecolor{SeaLink}{HTML}{000080}
+\definecolor{SeaCite}{HTML}{008000}
+% PAGE GEOMETRY
+\setlength{\textwidth}{30pc}
+\setlength{\textheight}{50.5pc}
+\setlength{\headheight}{8pt}
+\setlength{\headsep}{14pt}
+\setlength{\footskip}{18pt}
+\setlength{\topskip}{10pt}
+\calclayout
+\setlength{\normalparindent}{18pt}
+\setlength{\parindent}{18pt}
+\setlength{\parskip}{0pt}
+\setlength{\emergencystretch}{2em}
+\flushbottom
+% DIAGRAMS, LISTS, AND TABLES
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{arrows.meta,calc,positioning,matrix,decorations.pathmorphing}
+\tikzset{every picture/.style={color=SoftWhite},
+ every node/.style={text=SoftWhite},every path/.style={draw=SoftWhite}}
+\usepackage{booktabs,array,graphicx,enumitem,longtable}
+\setlist[itemize]{leftmargin=1.8em,itemsep=0pt,topsep=\smallskipamount,parsep=0pt}
+\setlist[enumerate]{label=(\alph*),leftmargin=1.8em,itemsep=0pt,topsep=\smallskipamount,parsep=0pt}
+% NUMBERING, HEADINGS, AND TABLE OF CONTENTS
+\setcounter{secnumdepth}{2}
+\setcounter{tocdepth}{1}
+\renewcommand{\thepart}{\Roman{part}}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\numberwithin{equation}{subsection}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}
+ {\z@}{2\baselineskip plus .5\baselineskip}
+ {\baselineskip}{\normalfont\Large\bfseries\centering}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}
+ {\z@}{\medskipamount}{-.5em}{\normalfont\bfseries}}
+\renewcommand{\@seccntformat}[1]{%
+ \csname the#1\endcsname
+ \ifnum\csname c@secnumdepth\endcsname>\z@\relax
+ \expandafter\ifx\csname #1\endcsname\section \enspace
+ \else .\enspace \fi\fi}
+\renewcommand{\frontmatter}{\cleardoublepage\pagenumbering{arabic}}
+\renewcommand{\mainmatter}{\cleardoublepage}
+\renewcommand{\tocsection}[3]{%
+ \indentlabel{\@ifnotempty{#2}{\ignorespaces#1 #2.\quad\hspace{3.11pt}}}#3}
+\makeatother
+% THEOREM ENVIRONMENTS
+\newtheoremstyle{sea-plain}
+ {\medskipamount}{\medskipamount}{\itshape}{0pt}{\bfseries}{}{.5em}
+ {\thmnumber{#2. }\thmname{#1}\thmnote{ (#3)}.\ ---}
+\newtheoremstyle{sea-definition}
+ {\medskipamount}{\medskipamount}{\normalfont}{0pt}{\normalfont}{}{.5em}
+ {\thmnumber{\textbf{#2.} }\thmname{\textit{#1\thmnote{: #3}.}}}
+\newtheoremstyle{sea-exercise}
+ {\medskipamount}{\medskipamount}{\normalfont}{0pt}{\normalfont}{}{.5em}
+ {\thmnumber{\textbf{#2.} }\thmname{\textsc{#1}}\thmnote{ (#3)}.}
+\theoremstyle{sea-plain}
+\newtheorem{theorem}[subsection]{Theorem}
+\newtheorem{proposition}[subsection]{Proposition}
+\newtheorem{lemma}[subsection]{Lemma}
+\newtheorem{corollary}[subsection]{Corollary}
+\newtheorem{claim}[subsection]{Claim}
+\theoremstyle{sea-definition}
+\newtheorem{definition}[subsection]{Definition}
+\newtheorem{example}[subsection]{Example}
+\newtheorem{construction}[subsection]{Construction}
+\newtheorem{remark}[subsection]{Remark}
+\newtheorem{note}[subsection]{Note}
+\newtheorem{warning}[subsection]{Warning}
+\newtheorem{conjecture}[subsection]{Conjecture}
+\theoremstyle{sea-exercise}
+\newtheorem{exercise}{Exercise}[section]
+\newtheorem{problem}[subsection]{Problem}
+\usepackage{alphalph}
+\renewcommand{\theexercise}{\thesection.\AlphAlph{\value{exercise}}}
+\makeatletter
+\renewenvironment{proof}[1][\proofname]{%
+ \par\pushQED{\qed}\normalfont
+ \topsep6\p@\@plus6\p@\relax\trivlist\itemindent\z@
+ \item[\hskip\labelsep\itshape#1\@addpunct{.}]\ignorespaces
+}{\popQED\endtrivlist\@endpefalse}
+\makeatother
+\newenvironment{solution}{\begin{proof}[Solution]}{\end{proof}}
+% OPERATORS AND NOTATION FOR COMPLEX ANALYSIS
+\DeclareMathOperator{\Aut}{Aut}
+\DeclareMathOperator{\im}{im}
+\DeclareMathOperator{\Res}{Res}
+\DeclareMathOperator{\Ind}{Ind}
+\DeclareMathOperator{\Log}{Log}
+\DeclareMathOperator{\Arg}{Arg}
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\Imag}{Im}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\dist}{dist}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\DD}{\mathbb{D}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\Chat}{\mathbb{C}_{\infty}}
+\newcommand{\Hol}{H}
+\newcommand{\Sch}{\mathcal{S}}
+\newcommand{\Fcal}{\mathcal{F}}
+\newcommand{\into}{\hookrightarrow}
+\newcommand{\onto}{\twoheadrightarrow}
+\newcommand{\isom}{\xrightarrow{\sim}}
+\newcommand{\dd}{\,d}
+\newcommand{\bD}[2]{\overline{D(#1,#2)}}
+\newcommand{\pD}[2]{D'(#1,#2)}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\definecolor{SplitLeft}{HTML}{B13A34}
+\definecolor{SplitRight}{HTML}{1F5FA8}
+\definecolor{OldInterval}{HTML}{803E9B}
+\newcommand{\leftpiece}[1]{\textcolor{SplitLeft}{#1}}
+\newcommand{\rightpiece}[1]{\textcolor{SplitRight}{#1}}
+\newcommand{\oldpiece}[1]{\textcolor{OldInterval}{#1}}
+\newcommand{\lectureinfo}[2]{%
+ \par\noindent{\small\textit{MATH 503, Fall 2025. #1. Source PDF pages #2.}}\par\medskip}
+\newcommand{\sourcefigure}[3]{%
+ \begin{figure}[htbp]\centering
+ \includegraphics[width=#2\linewidth]{figures/#1.pdf}
+ \caption{#3}\end{figure}}
+% TITLE, RUNNING HEADS, AND HYPERLINKS
+\title{Complex Analysis}
+\newcommand{\booksubtitle}{Lecture Notes without Proofs}
+\author{Notes from MATH 503, Fall 2025}
+\date{}
+\newcommand{\evenrunninghead}{Complex Analysis}
+\newcommand{\oddrunninghead}{MATH 503 Lecture Notes}
+\makeatletter
+\renewcommand{\maketitle}{%
+ \begin{titlepage}\setcounter{page}{1}\thispagestyle{empty}\centering
+ \vspace*{-13.8pt}
+ {\fontsize{20.74}{25}\selectfont\bfseries\MakeUppercase{\@title}\par}
+ \vspace{133.7pt}
+ {\fontsize{17.28}{22}\selectfont\bfseries\booksubtitle\par}
+ \vfill {\small\authors\par}
+ \ifx\@date\@empty\else\medskip{\small\@date\par}\fi
+ \vspace*{72pt}
+ \end{titlepage}}
+\def\ps@sea{%
+ \ps@empty
+ \def\@evenhead{\normalfont\scriptsize\rlap{\thepage}\hfil\evenrunninghead\hfil}%
+ \def\@oddhead{\normalfont\scriptsize\hfil\oddrunninghead\hfil\llap{\thepage}}}
+\makeatother
+\usepackage{hyperref}
+\hypersetup{
+ colorlinks=true,linkcolor=SeaLink,citecolor=SeaCite,urlcolor=SeaLink,
+ linktoc=page,pdfborder={0 0 0},bookmarksdepth=section,
+ pdftitle={Complex Analysis: MATH 503 Lecture Notes},
+ pdfauthor={MATH 503, Fall 2025}}
+\pdfstringdefDisableCommands{%
+ \def\enspace{ }\def\noindent{}\def\smallcaps#1{#1}\def\allcaps#1{#1}\def\leadphrase#1{#1}
+ \def\CC{C}\def\RR{R}\def\DD{D}\def\HH{H}\def\Chat{C infinity}}
+
+\newcommand{\src}[1]{\par\smallskip\noindent
+ {\scriptsize\sffamily\color{SoftWhite}Source slide #1.}\par\nopagebreak\smallskip}
+\newcommand{\lecturedetails}[2]{\par\noindent{\small
+ MATH 503, Fall 2025. #1. Merged PDF pages #2.}\par\medskip}
+\newcommand{\editorial}[1]{\par\smallskip\noindent
+ {\small\textit{Editorial clarification.} #1}\par\smallskip}
+\begin{document}
+\pagecolor{PageBlack}\color{SoftWhite}
+\everymath{\color{MathYellow}}
+\AtBeginEnvironment{equation}{\color{MathYellow}}
+\AtBeginEnvironment{equation*}{\color{MathYellow}}
+\AtBeginEnvironment{align}{\color{MathYellow}}
+\AtBeginEnvironment{align*}{\color{MathYellow}}
+\frontmatter\pagestyle{plain}\maketitle
+\chapter*{Reading this edition}
+This edition follows the source order of the twenty-one lectures in
+\emph{Complex Analysis Merged Notes(2).pdf}, MATH 503, Fall 2025.
+Source-slide numbers refer to pages of that merged PDF, not to the page
+numbers of this book. Definitions, statements, remarks, explanatory prose,
+and examples are kept; proofs are omitted. Explicit \emph{Prove it},
+\emph{Why?}, and similar reader prompts are recorded as exercises.
+
+The typesetting and numbering belong to this edition. Original
+illustrations are reproduced as vector figures. Recalled results are retained
+where they occur again. Editorial clarifications are identified separately.
+The accompanying coverage checklist records how every source page was handled.
+\tableofcontents
+\mainmatter\pagestyle{sea}
+\chapter{Complex Numbers}
+\lecturedetails{September 4, 2025}{1--27}
+\section{The complex field}
+\src{2}
+\begin{definition}[Complex numbers]
+A complex number is an ordered pair $(a,b)\in\RR\times\RR$.
+\end{definition}
+\begin{definition}[Addition and multiplication of complex numbers]
+For two complex numbers $x=(a,b)$ and $y=(c,d)$, addition and multiplication
+are defined by
+\[
+ x+y=(a+c,b+d),\qquad x\cdot y=(ac-bd,ad+bc).
+\]
+\end{definition}
+\src{3}
+\begin{theorem}[Complex field]
+These operations turn the set of all complex numbers into a field, with
+$(0,0)$ and $(1,0)$ playing respectively the roles of $0$ and $1$.
+This field is denoted by $\CC$.
+\end{theorem}
+\src{8}
+\begin{remark}
+For any $a,b\in\RR$,
+\[
+ (a,0)+(b,0)=(a+b,0),\qquad (a,0)(b,0)=(ab,0).
+\]
+The complex numbers in $\{(a,0):a\in\RR\}$ have the same arithmetic
+properties as the corresponding real numbers. We can therefore identify
+$(a,0)$ with $a$. This identification gives the real field $\RR$ as a
+subfield of $\CC$.
+
+We have defined $\CC$ without reference to the mysterious square root of
+$-1$. We now show that $(a,b)$ is equivalent to the customary $a+bi$.
+\end{remark}
+\begin{definition}
+The imaginary number is $i=(0,1)$.
+\end{definition}
+\src{9}
+\begin{theorem}
+One has $i^2=-1$.
+\end{theorem}
+\begin{theorem}
+One has $\CC=\{a+ib:a,b\in\RR\}$.
+\end{theorem}
+\src{10}
+\begin{definition}[Conjugate, real and imaginary parts]
+For $z=a+ib$ with $a,b\in\RR$, the number $\bar z=a-ib$ is its conjugate.
+The numbers $a,b$ are respectively its real and imaginary parts:
+\[
+ a=\Re(z)=\Real(z),\qquad b=\Im(z)=\Imag(z).
+\]
+\end{definition}
+\begin{theorem}
+For $z,w\in\CC$:
+\begin{enumerate}[label=(\roman*)]
+\item $\overline{z+w}=\bar z+\bar w$.
+\item $\overline{zw}=\bar z\,\bar w$.
+\item $z+\bar z=2\Real z$ and $z-\bar z=2i\Imag z$.
+\item $z\bar z$ is a positive real number except when $z=0$.
+\end{enumerate}
+\end{theorem}
+\src{12}
+\begin{definition}[Absolute value]
+For $z\in\CC$, its absolute value is $|z|=\sqrt{z\bar z}$.
+\end{definition}
+\begin{remark}
+This absolute value exists and is unique. It coincides with the real
+absolute value: if $x\in\RR$, then $\bar x=x$, and
+\[
+ |x|=\sqrt{x\bar x}=\sqrt{x^2}
+ =\begin{cases}x,&x\geq0,\\-x,&x<0.\end{cases}
+\]
+\end{remark}
+\src{13}
+\begin{theorem}[Properties of absolute value]
+For $z,w\in\CC$:
+\begin{enumerate}[label=(\roman*)]
+\item $|z|>0$ if and only if $z\ne0$, and $|0|=0$.
+\item $|\bar z|=|z|$.
+\item $|zw|=|z||w|$.
+\item $|\Real z|\leq|z|$ and $|\Imag z|\leq|z|$.
+\item $|z+w|\leq|z|+|w|$.
+\end{enumerate}
+\end{theorem}
+\src{15}
+\begin{definition}[Argument]
+An argument $\arg z$ of $z=a+ib$ is the angle which the segment from
+$(0,0)$ to $(a,b)$ makes with the positive real axis. The argument is not
+unique but is determined up to a multiple of $2\pi$.
+\end{definition}
+If $r=|z|$ and $\theta=\arg z$, then
+\[
+ z=r(\cos\theta+i\sin\theta).
+\]
+Trigonometric identities give
+\[
+ \arg(z_1z_2)=\arg z_1+\arg z_2,\qquad
+ \arg(z_1/z_2)=\arg z_1-\arg z_2,\qquad
+ \arg\bar z=-\arg z.
+\]
+An argument is \emph{principal} if it lies in $(-\pi,\pi]$.
+\editorial{Arguments are defined only for nonzero numbers. The displayed
+argument equalities are understood modulo $2\pi$.}
+\section{Topology of the complex plane}
+\src{16}
+\begin{definition}[Convergence]
+A sequence $(z_n)_{n\in\NN}\subseteq\CC$ converges to $z$, written
+$\lim_{n\to\infty}z_n=z$, if and only if $\lim_{n\to\infty}|z_n-z|=0$.
+Equivalently, for every $\varepsilon>0$ there is $N_\varepsilon\in\NN$ such
+that $n\geq N_\varepsilon$ implies $|z_n-z|<\varepsilon$.
+\end{definition}
+One has $z_n\to z$ if and only if
+$\Real z_n\to\Real z$ and $\Imag z_n\to\Imag z$.
+We write $z_n\to\infty$ when $|z_n|\to\infty$.
+\src{17}
+\begin{definition}[Cauchy sequence]
+A sequence $(z_n)$ is Cauchy if
+$\lim_{m,n\to\infty}|z_n-z_m|=0$. Equivalently, for every $\varepsilon>0$
+there is $N_\varepsilon$ such that $m,n\geq N_\varepsilon$ implies
+$|z_n-z_m|<\varepsilon$.
+\end{definition}
+\begin{theorem}
+The complex plane with metric $d(z_1,z_2)=|z_1-z_2|$ is a complete metric space.
+\end{theorem}
+\src{18}
+\begin{definition}[Discs, punctured discs, and circles]
+For $a\in\CC$ and $r>0$,
+\[
+\begin{aligned}
+D(a,r)&=\{z:|z-a|<r\},&
+\overline{D(a,r)}&=\{z:|z-a|\leq r\},\\
+D'(a,r)&=\{z:0<|z-a|<r\},&
+C(a,r)&=\{z:|z-a|=r\}.
+\end{aligned}
+\]
+The unit disc is $\DD=D(0,1)$. The punctured disc is open, and
+$C(a,r)=\overline{D(a,r)}\setminus D(a,r)$.
+\end{definition}
+\src{19}
+A set $\Omega\subseteq\CC$ is \emph{open} if each $a\in\Omega$ has a disc
+$D(a,r)\subseteq\Omega$. It is \emph{closed} if its complement
+$\Omega^c=\CC\setminus\Omega$ is open.
+
+A point $z$ is a \emph{limit point} of $\Omega$ if there is a sequence
+$(z_n)\subseteq\Omega$ with $z_n\ne z$ and $z_n\to z$.
+A set is closed if and only if it contains all its limit points. Its closure
+$\overline\Omega$ is the union of the set and its limit points.
+The boundary $\partial\Omega$ is its closure minus its interior.
+For instance, $C(a,r)=\partial D(a,r)$.
+\src{20}
+For $a,b\in\CC$, $[a,b]$ denotes the closed segment with endpoints $a,b$.
+For arbitrary $t_1<t_2$,
+\[
+ [a,b]=\left\{a+\frac{t-t_1}{t_2-t_1}(b-a):t_1\leq t\leq t_2\right\}.
+\]
+For $a_1,\ldots,a_{n+1}\in\CC$, a \emph{polygon} joining $a_1$ to
+$a_{n+1}$ is $\bigcup_{j=1}^n[a_j,a_{j+1}]$, abbreviated
+$[a_1,\ldots,a_{n+1}]$.
+\src{21}
+\begin{definition}[Connectedness]
+Let $(X,d)$ be a metric space and $E\subseteq X$. The set $E$ is connected
+if it cannot be written as a disjoint union of two nonempty relatively open
+subsets of $E$.
+\end{definition}
+Thus $E=A\cup B$, $A\cap B=\varnothing$, with $A,B$ open in $E$, implies
+$A=\varnothing$ or $B=\varnothing$. Otherwise this is called a
+\emph{separation} of $E$ into open sets. The union of two disjoint open
+discs $A,B$ is not connected, since
+\[
+ E=A\cup B=(A\cap E)\cup(B\cap E),
+\]
+where the two sets are nonempty, disjoint, and relatively open.
+An open connected set is called a \emph{region}.
+\src{22}
+\begin{definition}[Component]
+A maximal connected subset of $E$ is a component of $E$.
+\end{definition}
+For $a\in E$, let $C(a)$ be the union of all connected subsets of $E$
+containing $a$. Since $\{a\}$ is connected, $a\in C(a)$, and
+$E=\bigcup_{a\in E}C(a)$.
+\begin{lemma}
+\begin{enumerate}[label=(\roman*)]
+\item $C(a)$ is connected.
+\item Components of $E$ are disjoint or identical.
+\item Components of an open set are open.
+\end{enumerate}
+\end{lemma}
+\begin{theorem}
+An open set in the complex plane is a disjoint union of regions.
+\end{theorem}
+\editorial{The slide states the last two openness assertions for arbitrary
+metric spaces. They require local connectedness; here they are applied to
+$\CC$, where they hold.}
+\src{25}
+\begin{theorem}[Polygonal connectedness]
+A nonempty open subset $E$ of $\CC$ is connected if and only if any two
+points of $E$ can be joined by a polygonal path lying in $E$.
+\end{theorem}
+
+\chapter{Compactification, Holomorphic Functions, and Cauchy--Riemann Equations}
+\lecturedetails{September 8, 2025}{28--59}
+\section{The Riemann sphere}
+\src{29}
+Let $(X,d)$ be a metric space and $\Omega\subseteq X$. An open covering of
+$\Omega$ is a family $(U_\alpha)_{\alpha\in A}$ of open sets such that
+$\Omega\subseteq\bigcup_{\alpha\in A}U_\alpha$. The index set need not be countable.
+\begin{definition}[Compactness]
+A set in a metric space is compact if and only if every open covering has
+a finite subcovering.
+\end{definition}
+\begin{theorem}
+A set $\Omega$ in a metric space is compact if and only if every sequence
+in $\Omega$ has a subsequence converging to a point of $\Omega$.
+\end{theorem}
+\begin{theorem}
+A subset of $\CC$ is compact if and only if it is closed and bounded.
+\end{theorem}
+\src{30}
+Adjoining a point $\infty$, called the point at infinity, gives the
+\emph{extended complex plane} $\Chat=\CC\cup\{\infty\}$.
+The Riemann sphere is
+\[
+ S=\{(x_1,x_2,x_3)\in\RR^3:x_1^2+x_2^2+x_3^2=1\}.
+\]
+The \emph{stereographic projection} $f:S\to\Chat$ is
+\[
+ f(x_1,x_2,x_3)=\frac{x_1+ix_2}{1-x_3}\quad
+ ((x_1,x_2,x_3)\ne(0,0,1)),\qquad f(0,0,1)=\infty.
+\]
+The point $N=(0,0,1)$ is the north pole. The map is one-to-one and onto.
+\src{33--35}
+Identify $z=x+iy$ with $(x,y,0)\in\RR^3$. The line joining $z$ to $N$ is
+\[
+ tN+(1-t)z=((1-t)x,(1-t)y,t),\qquad-\infty<t<\infty.
+\]
+Its intersections with $S$ satisfy
+\[
+ (1-t)^2x^2+(1-t)^2y^2+t^2=1.
+\]
+Away from the north pole, this becomes
+$(1-t)|z|^2=1+t$, hence $t=(|z|^2-1)/(|z|^2+1)$.
+\sourcefigure{p034}{.9}{The stereographic projection diagram from source slide 34.}
+The other intersection is
+\[
+\begin{aligned}
+ Z&=\left(\left[1-\frac{|z|^2-1}{|z|^2+1}\right]x,
+ \left[1-\frac{|z|^2-1}{|z|^2+1}\right]y,
+ \frac{|z|^2-1}{|z|^2+1}\right)\\
+ &=\left(\frac{2x}{|z|^2+1},\frac{2y}{|z|^2+1},
+ \frac{|z|^2-1}{|z|^2+1}\right)\\
+ &=\left(\frac{z+\bar z}{|z|^2+1},
+ \frac{z-\bar z}{i(|z|^2+1)},\frac{|z|^2-1}{|z|^2+1}\right).
+\end{aligned}
+\]
+Thus the line through $(x,y,0)$ and $(0,0,1)$ meets $S\setminus\{N\}$ in
+exactly one point $Z=(x_1,x_2,x_3)$, and $f(Z)=z$.
+These are the \emph{spherical coordinates} of $z$; those of $\infty$ are
+$(0,0,1)$.
+\src{36--38}
+For $z,z'\in\Chat$, let $x=(x_1,x_2,x_3)$ and $x'=(x'_1,x'_2,x'_3)$
+be their spherical coordinates, as given above for each finite point. Define
+\[
+ d(z,z')=\sqrt{(x_1-x'_1)^2+(x_2-x'_2)^2+(x_3-x'_3)^2}.
+\]
+Consequently
+\[
+ d(z,z')^2=2-2(x_1x'_1+x_2x'_2+x_3x'_3).
+\]
+Writing $D=(|z|^2+1)(|z'|^2+1)$, the scalar product calculation is
+\[
+\begin{aligned}
+ x_1x'_1+x_2x'_2+x_3x'_3
+ &=\frac{(z+\bar z)(z'+\bar z')-(z-\bar z)(z'-\bar z')
+       +( |z|^2-1)(|z'|^2-1)}{D}\\
+ &=\frac{(|z|^2-1)(|z'|^2-1)+2z\bar z'+2\bar z z'}{D}\\
+ &=\frac{D-2(|z|^2+1)-2(|z'|^2+1)+4+2z\bar z'+2\bar z z'}{D}.
+\end{aligned}
+\]
+The numerator subtracted from $D$ is
+\[
+\begin{aligned}
+ &2(|z|^2+1)+2(|z'|^2+1)-4-2z\bar z'-2\bar z z'\\
+ &\qquad=2(|z|^2+|z'|^2-z\bar z'-\bar z z')=2|z-z'|^2.
+\end{aligned}
+\]
+Therefore
+\[
+ 2(x_1x'_1+x_2x'_2+x_3x'_3)=2-\frac{4|z-z'|^2}{D},
+\quad d(z,z')^2=\frac{4|z-z'|^2}{D},
+\]
+\[
+ d(z,z')=\frac{2|z-z'|}{\sqrt{(|z|^2+1)(|z'|^2+1)}}.
+\]
+If $z'=\infty$, then $x'_1=x'_2=0$, $x'_3=1$, and
+\[
+ d(z,\infty)^2=2-2x_3
+ =2-2\frac{|z|^2-1}{|z|^2+1}=\frac4{|z|^2+1}.
+\]
+\src{39}
+Hence $d(z,\infty)=2/\sqrt{|z|^2+1}$, and $\Chat$ is a metric space.
+For $E\subseteq\Chat$, the induced topology is characterized as follows:
+\begin{itemize}
+\item If $\infty\notin E$, then $E$ is open in $\Chat$ if and only if it is
+open in $\CC$.
+\item If $\infty\in E$, then $E$ is open if and only if its complement in
+$\Chat$ is a closed bounded (equivalently compact) subset of $\CC$.
+\end{itemize}
+Checking continuity of $f$ and $f^{-1}$ gives:
+\begin{theorem}
+The extended complex plane is homeomorphic to $S$. In particular, it is compact.
+\end{theorem}
+\section{Complex functions}
+\src{40}
+A function $f$ on $E\subseteq\CC$ assigns to each $z\in E$ a unique complex
+number $w=f(z)$, its value at $z$. The set $E$ is the domain of definition.
+If $z=x+iy$ and $w=u+iv=f(x+iy)$, then $u,v$ depend on the real variables
+$x,y$, and
+\[
+ f(z)=u(x,y)+iv(x,y),\qquad u=\Real f,\quad v=\Imag f.
+\]
+\src{41}
+\begin{example}
+For $f(z)=z^2$, $f(x+iy)=x^2-y^2+2ixy$, so
+$\Real f=x^2-y^2$ and $\Imag f=2xy$. Its domain is all of $\CC$.
+\end{example}
+\begin{example}[Branches of roots]
+Assigning all $n$th roots to each complex number does not give a function
+in the preceding single-valued sense: each $z\ne0$ has $n$ roots.
+If $z=|z|(\cos\theta+i\sin\theta)$ with $\theta\in(-\pi,\pi]$, they are
+\[
+ z_k=\sqrt[n]{|z|}
+ \left(\cos\frac{\theta+2k\pi}{n}
+ +i\sin\frac{\theta+2k\pi}{n}\right),\qquad k=0,\ldots,n-1.
+\]
+These determine $n$ branches. Choosing a particular $k$ makes a
+single-valued function. The $k=0$ branch is the principal branch.
+\end{example}
+\src{42}
+\begin{definition}[Continuity]
+For $f:E\to\CC$ and $z_0\in E$, continuity at $z_0$ means that, for every
+$\varepsilon>0$, there is $\delta>0$ such that
+$z\in E$ and $|z-z_0|<\delta$ imply $|f(z)-f(z_0)|<\varepsilon$.
+Equivalently, whenever $z_n\in E$ and $z_n\to z_0$, one has
+$f(z_n)\to f(z_0)$.
+\end{definition}
+Continuity on $E$ means continuity at every point. Sums and products of
+continuous functions are continuous. A complex function is continuous if
+and only if both its real and imaginary parts are continuous.
+\src{43}
+Convergence in $\CC$ and in $\RR^2$ is the same, so continuity as a complex
+function is equivalent to continuity as a function of $x,y$. The triangle
+inequality shows that continuity of $f$ implies continuity of $|f|$.
+Here attaining a maximum at $z_0$ means $|f(z)|\leq|f(z_0)|$ for all
+$z\in E$, with the inequality reversed for a minimum.
+\begin{theorem}
+A continuous complex function on a compact set is bounded and attains a
+maximum and a minimum of its absolute value.
+\end{theorem}
+\src{44}
+\begin{example}
+The function $z^2$ is continuous on $\CC$. The principal square root is
+continuous on $\CC\setminus(-\infty,0]$. Recall its two values
+\[
+ z_k=\sqrt{|z|}
+ \left(\cos\frac{\theta+2k\pi}{2}
+ +i\sin\frac{\theta+2k\pi}{2}\right),\quad k=0,1.
+\]
+For $z=x+iy$ with fixed $x<0$, as $y\to0^+$ the argument tends to $\pi$
+and the principal root tends to $i\sqrt{|x|}$; as $y\to0^-$, the argument
+tends to $-\pi$ and the root tends to $-i\sqrt{|x|}$. This exhibits the
+discontinuity across the negative real axis.
+\end{example}
+\editorial{At $x=0$ both limits are $0$; the discontinuity concerns $x<0$.
+This specifies the endpoint qualification in the source's $x\leq0$ wording.}
+\section{Complex differentiation}
+\src{45}
+\begin{definition}
+For $f:\Omega\to\CC$ on an open set, the derivative at $z_0\in\Omega$ is
+\[
+ f'(z_0)=\lim_{z\to z_0}\frac{f(z)-f(z_0)}{z-z_0},
+\]
+if this limit exists. Explicitly, every $\varepsilon>0$ must admit $\delta>0$
+such that
+\[
+ \left|\frac{f(z)-f(z_0)}{z-z_0}-f'(z_0)\right|<\varepsilon
+ \qquad(z\in D'(z_0,\delta)).
+\]
+If this holds at every point, $f$ is holomorphic or analytic on $\Omega$.
+The class is denoted by $\Hol(\Omega)$. A function holomorphic on all of
+$\CC$ is entire.
+\end{definition}
+\src{46}
+If $f,g\in\Hol(\Omega)$, then $f+g,fg\in\Hol(\Omega)$, so
+$\Hol(\Omega)$ is a ring. If $g$ never vanishes, then $f/g$ is holomorphic.
+For $\alpha,\beta\in\CC$,
+\[
+ (\alpha f+\beta g)'=\alpha f'+\beta g',\quad
+ (fg)'=f'g+fg',\quad (f/g)'=\frac{f'g-fg'}{g^2}.
+\]
+Compositions of holomorphic functions are also holomorphic.
+\src{47}
+\begin{lemma}[Chain rule]
+If $f\in\Hol(\Omega)$, $f(\Omega)\subseteq\Omega_1$, and
+$g\in\Hol(\Omega_1)$, then $h=g\circ f\in\Hol(\Omega)$ and
+$h'(z_0)=g'(f(z_0))f'(z_0)$.
+\end{lemma}
+\src{48}
+\begin{theorem}
+Let $g$ be analytic on an open set $\Omega_1$ and $f$ continuous on an
+open set $\Omega$. Suppose $f(\Omega)\subseteq\Omega_1$, $g'$ never
+vanishes, and $g(f(z))=z$ for every $z\in\Omega$ (so $f$ is one-to-one).
+Then $f$ is analytic and $f'=1/(g'\circ f)$.
+\end{theorem}
+\src{49}
+\begin{example}
+The function $z$ is holomorphic, with derivative $1$. Every polynomial
+\[
+ p(z)=a_0+a_1z+\cdots+a_nz^n,\qquad
+ p'(z)=a_1+2a_2z+\cdots+na_nz^{n-1},
+\]
+is entire. The function $1/z$ is holomorphic on every open set not containing
+$0$, with derivative $-1/z^2$. By contrast, $f(z)=\bar z$ is not holomorphic:
+\[
+ \frac{f(z_0+h)-f(z_0)}h=\frac{\bar h}{h},
+\]
+which has different limits along real and purely imaginary $h\to0$.
+\end{example}
+\section{Real differentiability and the Cauchy--Riemann equations}
+\src{50}
+\begin{definition}
+For $E\subseteq\RR^n$ open and $F:E\to\RR^m$, differentiability at $x$
+means that there is a linear map $A:\RR^n\to\RR^m$ such that
+\[
+ \lim_{h\to0}\frac{|F(x+h)-F(x)-Ah|}{|h|}=0.
+\]
+We write $A=F'(x)$. Differentiability in $E$ means differentiability at every
+point. Equivalently,
+\[
+ F(x+h)-F(x)=F'(x)h+r(h),\qquad \lim_{h\to0}\frac{|r(h)|}{|h|}=0.
+\]
+\end{definition}
+\src{51}
+For $F=(F_1,\ldots,F_m)$, the derivative matrix, when it exists, is
+\[
+ F'(x_0)=\begin{bmatrix}
+ \frac{\partial F_1}{\partial x_1}(x_0)&\cdots&
+ \frac{\partial F_1}{\partial x_n}(x_0)\\
+ \vdots&\ddots&\vdots\\
+ \frac{\partial F_m}{\partial x_1}(x_0)&\cdots&
+ \frac{\partial F_m}{\partial x_n}(x_0)
+ \end{bmatrix}.
+\]
+If all partial derivatives exist near $x_0$ and are continuous at $x_0$,
+then $F$ is differentiable there. Existence of partial derivatives alone
+does not suffice: the function
+\[
+ F(x,y)=\begin{cases}y^3/(x^2+y^2),&(x,y)\ne(0,0),\\0,&(x,y)=(0,0)\end{cases}
+\]
+has both partial derivatives at the origin but is not differentiable
+there; its partial derivatives are not continuous there.
+\editorial{The slide introduces this example as a failed converse.
+The example specifically shows that existence of partial derivatives is
+insufficient; it is not an example of a differentiable function with
+discontinuous partial derivatives.}
+\src{52}
+Recall that $\bar z$ is not complex differentiable because its difference
+quotient is $\bar h/h$. As a real-variable map it is $F(x,y)=(x,-y)$,
+which is indefinitely differentiable. Thus real differentiability does not
+guarantee holomorphicity. More generally, to $f=u+iv$ we associate
+$F(x,y)=(u(x,y),v(x,y))$.
+\src{53}
+For $h=(h_1,h_2)\to0$, real differentiability gives
+\[
+\begin{aligned}
+u(x_0+h_1,y_0+h_2)-u(x_0,y_0)
+ &=u_x(x_0,y_0)h_1+u_y(x_0,y_0)h_2+r_1(h),\\
+v(x_0+h_1,y_0+h_2)-v(x_0,y_0)
+ &=v_x(x_0,y_0)h_1+v_y(x_0,y_0)h_2+r_2(h),
+\end{aligned}
+\]
+where $r(h)=(r_1(h),r_2(h))$ and $|r_j(h)|/|h|\to0$ for $j=1,2$.
+\src{54}
+\begin{theorem}[Cauchy--Riemann equations]
+If $f:\Omega\to\CC$ is holomorphic, then
+\[
+ \frac{\partial f}{\partial x}=\frac1i\frac{\partial f}{\partial y}.
+\]
+Writing $f=u+iv$ with $u,v$ real valued gives
+$u_x=v_y$ and $u_y=-v_x$.
+These are the Cauchy--Riemann equations.
+\end{theorem}
+\src{57}
+\begin{theorem}
+If $f=u+iv$ on an open $\Omega$, and $u,v$ are real differentiable and
+satisfy the Cauchy--Riemann equations throughout $\Omega$, then $f$ is
+holomorphic.
+\end{theorem}
+\src{59}
+\begin{example}
+The real differentiability hypothesis is essential. Consider
+$f(x,y)=\sqrt{|xy|}$ as a complex function with zero imaginary part.
+It has both partial derivatives at $(0,0)$ and satisfies the
+Cauchy--Riemann equations there. It is not real differentiable at the
+origin, however, and is not complex differentiable there.
+\end{example}
+
+\chapter{Power Series and Integration over Curves}
+\lecturedetails{September 11, 2025}{60--86}
+\section{Power series}
+\src{61}
+Given $(w_n)_{n\geq0}\subseteq\CC$, the series $\sum_{n=0}^\infty w_n$
+converges to $w$ if $\lim_{n\to\infty}\sum_{k=0}^nw_k=w$; otherwise it
+diverges. It converges if and only if its partial sums are Cauchy, that is,
+$\lim_{m,n\to\infty}\sum_{k=m}^nw_k=0$.
+It converges \emph{absolutely} if $\sum|w_n|$ converges.
+As for real series, absolute convergence implies convergence.
+Absolute convergence is equivalent to boundedness of the partial sums
+$\sum_{k=0}^n|w_k|$.
+\src{62}
+\begin{theorem}[Ratio test]
+For a series $\sum w_n$ of nonzero terms, if
+$\limsup_{n\to\infty}|w_{n+1}/w_n|<1$, it converges absolutely.
+If $|w_{n+1}/w_n|\geq1$ for all sufficiently large $n$, it diverges.
+\end{theorem}
+\begin{exercise}Prove the ratio test.\end{exercise}
+\begin{theorem}[Root test]
+For any complex series $\sum w_n$, if
+$\limsup_{n\to\infty}|w_n|^{1/n}<1$, it converges absolutely.
+If this limsup is greater than $1$, it diverges.
+\end{theorem}
+\begin{exercise}Prove the root test.\end{exercise}
+\src{63}
+For complex-valued functions $(f_n)$ on a set $S$, pointwise convergence
+is equivalent to the pointwise Cauchy condition. Uniform convergence is
+equivalent to the uniform Cauchy condition:
+$|f_n(z)-f_m(z)|\to0$ uniformly for $z\in S$ as $m,n\to\infty$.
+\begin{theorem}[Weierstrass M-test]
+If $|g_n(z)|\leq M_n$ on $S\subseteq\CC$ and
+$\sum_{n=1}^\infty M_n<\infty$, then $\sum_{n=1}^\infty g_n(z)$
+converges uniformly on $S$.
+\end{theorem}
+\src{64}
+Series $\sum_{n=0}^\infty a_n(z-z_0)^n$, with $a_n,z_0\in\CC$, are
+called \emph{power series}. They are series of functions of the special
+form $f_n(z)=a_n(z-z_0)^n$.
+\begin{theorem}
+If such a series converges at $z$ with $|z-z_0|=r$, it converges absolutely
+in $D(z_0,r)$, uniformly on every closed subdisc and hence on every compact
+subset of $D(z_0,r)$.
+\end{theorem}
+\src{65}
+\begin{theorem}[Radius of convergence]
+The radius of convergence of $\sum a_n(z-z_0)^n$ is
+\[
+ r=\left(\limsup_{n\to\infty}\sqrt[n]{|a_n|}\right)^{-1},
+\]
+with conventions $1/0=\infty$ and $1/\infty=0$. The series converges
+absolutely on $D(z_0,r)$, uniformly on compact subsets, and diverges
+when $|z-z_0|>r$.
+\end{theorem}
+\src{66}
+\begin{definition}
+A function $f:\Omega\to\CC$ on an open set is representable by power
+series in $\Omega$ if, for every disc $D(a,r)\subseteq\Omega$, there are
+coefficients $c_n$ with
+\[
+ f(z)=\sum_{n=0}^\infty c_n(z-a)^n\qquad(z\in D(a,r)).
+\]
+\end{definition}
+\begin{theorem}
+Such a function is holomorphic, and its derivative is also representable
+by power series. On the same disc,
+\[
+ f'(z)=\sum_{n=1}^\infty nc_n(z-a)^{n-1}.
+\]
+\end{theorem}
+\src{70}
+\begin{remark}
+The theorem applies again to $f'$, so derivatives of every order exist and
+are representable by power series:
+\[
+ f^{(k)}(z)=\sum_{n=k}^\infty
+ n(n-1)\cdots(n-k+1)c_n(z-a)^{n-k}.
+\]
+Consequently $k!c_k=f^{(k)}(a)$ for $k=0,1,2,\ldots$, which ensures the
+uniqueness of the coefficient sequence at each center.
+\end{remark}
+\src{71}
+\begin{example}[Geometric series]
+The series $\sum_{n=0}^\infty z^n$ converges absolutely exactly for $|z|<1$.
+Its sum there is $1/(1-z)$, although that function is holomorphic on
+$\CC\setminus\{1\}$. As in the real case,
+\[
+ \sum_{n=0}^Nz^n=\frac{1-z^{N+1}}{1-z},\qquad z^{N+1}\to0\quad(|z|<1).
+\]
+Termwise differentiation gives, on $D(0,1)$,
+\[
+ \frac1{(1-z)^2}=\left(\frac1{1-z}\right)'
+ =\sum_{n=1}^\infty nz^{n-1}.
+\]
+\end{example}
+\src{72--75}
+\begin{example}[Exponential and trigonometric functions]
+The complex exponential, cosine, and sine are defined by
+\[
+ e^z=\exp z=\sum_{n=0}^\infty\frac{z^n}{n!},\quad
+ \cos z=\sum_{n=0}^\infty(-1)^n\frac{z^{2n}}{(2n)!},\quad
+ \sin z=\sum_{n=0}^\infty(-1)^n\frac{z^{2n+1}}{(2n+1)!}.
+\]
+They agree with the usual real functions on $\RR$, and all three series
+converge absolutely on $\CC$. Indeed $|z^n/n!|=|z|^n/n!$, so the
+exponential series is bounded in absolute value by
+$\sum|z|^n/n!=e^{|z|}<\infty$. This also proves uniform convergence on
+each bounded disc. The same argument applies to sine and cosine.
+\[
+ \exp'(z)=\sum_{n=1}^\infty n\frac{z^{n-1}}{n!}
+ =\sum_{m=0}^\infty\frac{z^m}{m!}=\exp z,\qquad
+ \cos' z=-\sin z,\quad \sin' z=\cos z.
+\]
+These functions are entire. Absolute convergence permits multiplication:
+\[
+\begin{aligned}
+\left(\sum_{k=0}^\infty\frac{z^k}{k!}\right)
+\left(\sum_{m=0}^\infty\frac{w^m}{m!}\right)
+ &=\sum_{n=0}^\infty\frac1{n!}
+   \sum_{k=0}^n\frac{n!}{k!(n-k)!}z^kw^{n-k}\\
+ &=\sum_{n=0}^\infty\frac{(z+w)^n}{n!}.
+\end{aligned}
+\]
+Thus $\exp z\exp w=\exp(z+w)$, and a direct calculation gives
+$\exp(iy)=\cos y+i\sin y$ for real $y$.
+Moreover $\exp z=1$ if and only if $z=2k\pi i$, $k\in\ZZ$.
+For $z=x+iy$, the modulus condition and the trigonometric identity force
+$x=0$; then $\cos y=1$ and $\sin y=0$ force $y=2k\pi$.
+Consequently the complex exponential has period $2\pi i$:
+$\exp(z+2k\pi i)=\exp z$ for $z\in\CC$, $k\in\ZZ$.
+\end{example}
+\section{Integration over paths}
+\src{76}
+\begin{definition}[Curve]
+In a topological space $X$, a curve is a continuous map
+$\gamma:[\alpha,\beta]\to X$, where $\alpha<\beta$ and the interval is
+compact. Its parameter interval is $[\alpha,\beta]$ and its range is
+$\gamma^*=\gamma([\alpha,\beta])=\{\gamma(t):t\in[\alpha,\beta]\}$.
+\end{definition}
+The range is compact and connected. The curve is closed if its initial
+point $\gamma(\alpha)$ equals its endpoint $\gamma(\beta)$.
+We distinguish the oriented geometric object $\gamma^*$ from its
+parametrization $\gamma$; the parametrization is not unique.
+\src{77}
+Two parametrizations $\gamma:[\alpha,\beta]\to\CC$ and
+$\widetilde\gamma:[\alpha_1,\beta_1]\to\CC$ are equivalent if there is a
+continuously differentiable bijection
+$\phi:[\alpha_1,\beta_1]\to[\alpha,\beta]$ with $\phi'>0$ and
+$\widetilde\gamma(s)=\gamma(\phi(s))$.
+The positive derivative preserves orientation as $s$ travels from
+$\alpha_1$ to $\beta_1$. Equivalent parametrizations give the same oriented
+curve, whose orientation is determined by increasing parameter.
+\src{78}
+\begin{definition}[Path]
+A path is a piecewise continuously differentiable plane curve. More precisely,
+it is a continuous complex function $\gamma$ on $[\alpha,\beta]$ for which
+there are finitely many points
+$\alpha=s_0<s_1<\cdots<s_n=\beta$, and $\gamma$ has a continuous derivative
+on each $[s_{j-1},s_j]$. Left and right derivatives at the intervening
+endpoints may differ. A closed path is a closed curve which is a path.
+\end{definition}
+\src{79}
+\begin{definition}[Path integral]
+If $f$ is continuous on the trace of a path $\gamma$, define
+\[
+ \int_\gamma f(z)\dd z=\int_\alpha^\beta f(\gamma(t))\gamma'(t)\dd t.
+\]
+The integral on the right is a Riemann integral: $\gamma'$ is bounded
+and has at most finitely many discontinuities.
+\end{definition}
+Unless otherwise mentioned, closed contour integrals in the lectures use
+the anticlockwise orientation.
+\src{80}
+Let $\phi:[a,b]\to[\alpha,\beta]$ be continuous, strictly increasing,
+onto, and continuously differentiable. Then
+$\phi(a)=\alpha$, $\phi(b)=\beta$, and $\sigma=\gamma\circ\phi$ is a
+path on $[a,b]$. For $f$ continuous on the common trace,
+$\int_\sigma f(z)\dd z=\int_\gamma f(z)\dd z$.
+The map $\phi$ is a change of parameter.
+\src{81}
+If the endpoint of $\gamma_1$ is the initial point of $\gamma_2$, a suitable
+reparametrization allows us to follow first $\gamma_1$, then $\gamma_2$.
+The resulting path is denoted $\gamma=\gamma_1+\gamma_2$, and
+\[
+ \int_\gamma f=\int_{\gamma_1}f+\int_{\gamma_2}f
+\]
+for continuous $f$ on $\gamma_1^*\cup\gamma_2^*$.
+For paths $\gamma_1,\ldots,\gamma_n$ with matching successive endpoints,
+$\gamma_1+\cdots+\gamma_n$ is defined similarly.
+\src{82}
+For $\gamma:[0,1]\to\CC$, the opposite path is
+$\gamma_1(t)=\gamma(1-t)$ and $\int_\gamma f=-\int_{\gamma_1}f$.
+Also, for a path on $[\alpha,\beta]$,
+\[
+\begin{aligned}
+ \left|\int_\gamma f(z)\dd z\right|
+ &=\left|\int_\alpha^\beta f(\gamma(t))\gamma'(t)\dd t\right|\\
+ &\leq\max_{z\in\gamma^*}|f(z)|\int_\alpha^\beta|\gamma'(t)|\dd t
+ =\ell(\gamma)\max_{z\in\gamma^*}|f(z)|.
+\end{aligned}
+\]
+Here $\ell(\gamma)=\int_\alpha^\beta|\gamma'(t)|\dd t$ is the length.
+\src{83}
+\begin{remark}
+For a closed path, $\Chat\setminus\gamma^*$ is open and is a disjoint
+union of regions. These are the regions determined by $\gamma$.
+Precisely one contains $\infty$, corresponding to the unbounded region.
+The regions determined in $\Chat$ and in $\CC$ are identical except that
+the unbounded region in $\CC$ does not contain $\infty$.
+\end{remark}
+\src{84}
+\begin{example}[Circle]
+The positively oriented circle of center $a$ and radius $r$ is
+$\gamma(t)=a+re^{it}$, $0\leq t\leq2\pi$. Its length is $2\pi r$ and
+\[
+ \int_\gamma f(z)\dd z=\int_0^{2\pi}f(a+re^{it})ire^{it}\dd t.
+\]
+\end{example}
+\src{85}
+\begin{example}[Segment]
+The positively oriented interval $[a,b]$ is parametrized by
+$\gamma(t)=a+(b-a)t$, $0\leq t\leq1$. It has length $|b-a|$ and
+\[
+ \int_{[a,b]}f(z)\dd z=(b-a)\int_0^1f(a+(b-a)t)\dd t.
+\]
+On an arbitrary $[\alpha,\beta]$, the equivalent parametrization is
+$\gamma_1(t)=[a(\beta-t)+b(t-\alpha)]/(\beta-\alpha)$.
+The opposite path is $[b,a]$.
+\end{example}
+\src{86}
+\begin{example}[Triangle]
+For an ordered triple $\{a,b,c\}$, the triangle $\Delta(a,b,c)$ is the
+smallest convex set containing these points. For continuous $f$ on its
+boundary, define
+\[
+ \int_{\partial\Delta}f=\int_{[a,b]}f+\int_{[b,c]}f+\int_{[c,a]}f.
+\]
+Alternatively, regard $\partial\Delta$ as the concatenation of these paths,
+and the equality follows from path addition. Cyclic permutation of
+$a,b,c$ does not change the integral; replacing the order by $a,c,b$
+changes its sign.
+\end{example}
+
+\chapter{Index function and Cauchy's theorem}
+\lecturedetails{September 15, 2025}{87--113}
+\section{Index and primitives}
+\src{88}
+\begin{definition}
+For a path $\gamma$ and $a\notin\gamma^*$, write
+\[
+\Ind_\gamma(a)=\frac1{2\pi i}\int_\gamma\frac{dz}{z-a}.
+\]
+This is the \emph{index}, or \emph{winding number}, of $\gamma$ about $a$.
+\end{definition}
+\begin{theorem}
+If $\gamma$ is closed and $\Omega=\CC\setminus\gamma^*$, then
+$\Ind_\gamma$ is integer-valued, constant on each region of $\Omega$,
+and zero on the unbounded region.
+\end{theorem}
+\src{91}
+\begin{remark}
+For a closed curve and $a$ outside its image, the number of times
+the curve winds around $a$ can be computed from the change of argument
+of $z-a$ as $z$ travels along the curve. The quantity $\arg(z-a)/(2\pi)$
+increases or decreases by one for each complete positive or negative turn.
+Logarithms will later give a geometric explanation of this interpretation.
+\end{remark}
+\src{92}
+\begin{theorem}
+For the positively oriented circle $\gamma$ of center $a$ and radius $r$,
+\[
+\Ind_\gamma(z)=
+\begin{cases}1,&|z-a|<r,\\0,&|z-a|>r.\end{cases}
+\]
+\end{theorem}
+\src{93}
+\begin{definition}
+A \emph{primitive} of $f:\Omega\to\CC$, where $\Omega$ is open,
+is a holomorphic function $F$ on $\Omega$ with $F'=f$.
+\end{definition}
+\begin{theorem}
+If $f$ is continuous on $\Omega$ and has a primitive $F$ there,
+then for any path $\gamma$ from $w_1$ to $w_2$ in $\Omega$,
+$\int_\gamma f(z)\,dz=F(w_2)-F(w_1)$.
+\end{theorem}
+\src{95}
+\begin{corollary}
+If $f$ is continuous on an open set, has a primitive there, and
+$\gamma$ is a closed path in that set, then $\int_\gamma f(z)\,dz=0$.
+\end{corollary}
+\begin{example}
+The function $f(z)=1/z$ has no primitive on $\CC\setminus\{0\}$.
+On the unit circle $C$, parametrized by $z=e^{it}$,
+\[
+\int_C f(z)\,dz=\int_0^{2\pi}\frac{ie^{it}}{e^{it}}\,dt=2\pi i\ne0.
+\]
+\end{example}
+\src{96}
+\begin{corollary}
+If $f$ is holomorphic on a region $\Omega$ and $f'=0$, then $f$ is constant.
+\end{corollary}
+\section{Local Cauchy theorem}
+\src{97}
+\begin{theorem}[Cauchy--Goursat]
+Let $\Omega\subseteq\CC$ be open, let $\Delta$ be a closed triangle
+contained in $\Omega$, and let $p\in\Omega$. If $f$ is continuous
+on $\Omega$ and holomorphic on $\Omega\setminus\{p\}$, then
+$\int_{\partial\Delta}f(z)\,dz=0$.
+\end{theorem}
+\begin{remark}
+In particular, this holds for every triangular path in $\Omega$
+when $f$ is holomorphic on $\Omega$. This is Cauchy's theorem
+for triangular paths.
+\end{remark}
+\src{104}
+\begin{theorem}[Cauchy's theorem for convex sets]
+Let $\Omega\subseteq\CC$ be convex and open, and let $p\in\Omega$.
+If $f$ is continuous on $\Omega$ and holomorphic on
+$\Omega\setminus\{p\}$, then $f$ has a primitive on $\Omega$, and
+$\int_\gamma f(z)\,dz=0$ for every closed path $\gamma$ in $\Omega$.
+\end{theorem}
+\begin{corollary}
+Every holomorphic function on an open convex set has a primitive;
+its integral along every closed path in that set is zero.
+\end{corollary}
+\src{107}
+\begin{remark}
+Cauchy's theorem also holds for the illustrated regions,
+although some of them are not convex.
+\end{remark}
+\sourcefigure{p107}{.93}{The original multiple keyhole, rectangular keyhole,
+semicircle, indented semicircle, sector, and parallelogram (slide 107).}
+\begin{exercise}
+Explain why Cauchy's theorem holds in each of these regions.
+\end{exercise}
+\section{Worked contour-integral examples}
+\src{108--110}
+\begin{example}[Gaussian Fourier transform]
+For $\xi\in\RR$,
+\[
+e^{-\pi\xi^2}=\int_{-\infty}^{\infty}e^{-\pi x^2}e^{-2\pi ix\xi}\,dx.
+\]
+For $\xi=0$, this is the known Gaussian integral
+$\int_\RR e^{-\pi x^2}\,dx=1$. For $\xi>0$, use the entire
+function $f(z)=e^{-\pi z^2}$ and the positively oriented rectangle
+with vertices $R,R+i\xi,-R+i\xi,-R$.
+\sourcefigure{p108}{.93}{The rectangle $\gamma_R$ used for the Gaussian transform.}
+Cauchy's theorem gives $\int_{\gamma_R}f(z)\,dz=0$.
+The bottom side contributes $\int_{-R}^R e^{-\pi x^2}\,dx\to1$.
+On the right side,
+\[
+I(R)=\int_0^\xi f(R+iy)i\,dy
+=i\int_0^\xi e^{-\pi(R^2+2iRy-y^2)}\,dy.
+\]
+For fixed $\xi$, $|I(R)|\le C e^{-\pi R^2}\to0$.
+The left side has the same vanishing limit. The top contributes
+\[
+\int_R^{-R}e^{-\pi(x+i\xi)^2}\,dx
+=-e^{\pi\xi^2}\int_{-R}^R e^{-\pi x^2}e^{-2\pi ix\xi}\,dx.
+\]
+Thus the limiting identity is
+$0=1-e^{\pi\xi^2}\int_\RR e^{-\pi x^2}e^{-2\pi ix\xi}\,dx$.
+For $\xi<0$, use the corresponding rectangle in the lower half-plane.
+\end{example}
+\src{111--113}
+\begin{example}
+Another classical integral is
+$\int_0^\infty(1-\cos x)/x^2\,dx=\pi/2$.
+Take $f(z)=(1-e^{iz})/z^2$ and an indented semicircle
+in the upper half-plane.
+\sourcefigure{p111}{.93}{The small negatively oriented and large positively
+oriented semicircles in the original example.}
+Denote the small and large arcs by $\gamma_\varepsilon^+$ and
+$\gamma_R^+$; their orientations are negative and positive, respectively.
+Cauchy's theorem yields
+\[
+\int_{-R}^{-\varepsilon}f(x)\,dx+
+\int_{\gamma_\varepsilon^+}f(z)\,dz+
+\int_\varepsilon^R f(x)\,dx+
+\int_{\gamma_R^+}f(z)\,dz=0.
+\]
+On the large arc, $|f(z)|\le2/|z|^2$, so its integral tends to zero
+as $R\to\infty$. Consequently
+\[
+\int_{|x|\ge\varepsilon}\frac{1-e^{ix}}{x^2}\,dx
+=-\int_{\gamma_\varepsilon^+}\frac{1-e^{iz}}{z^2}\,dz.
+\]
+Near zero, $f(z)=-i/z+E(z)$, where $E$ is bounded.
+Parametrizing the small arc by $z=\varepsilon e^{i\theta}$,
+with $\theta$ decreasing from $\pi$ to $0$, gives
+\[
+\lim_{\varepsilon\to0}
+\int_{\gamma_\varepsilon^+}f(z)\,dz
+=\int_\pi^0(-i)i\,d\theta=-\pi.
+\]
+Taking real parts gives $\int_\RR(1-\cos x)/x^2\,dx=\pi$.
+The integrand is even, giving the stated half-line integral.
+\end{example}
+
+\chapter{Cauchy's integral formula and Laurent series}
+\lecturedetails{September 18, 2025}{114--139}
+\section{Integral formula and its consequences}
+\src{115}
+\begin{theorem}[Recall: Cauchy's theorem for convex sets]
+If $\Omega$ is open and convex, $p\in\Omega$, and $f$ is continuous
+on $\Omega$ and holomorphic on $\Omega\setminus\{p\}$, then $f$
+has a primitive on $\Omega$ and $\int_\gamma f(z)\,dz=0$ for
+every closed path $\gamma$ in $\Omega$.
+\end{theorem}
+\begin{theorem}[Cauchy's integral formula for convex sets]
+Let $\gamma$ be a closed path in an open convex set $\Omega\subseteq\CC$
+and $f\in H(\Omega)$. For every $a\in\Omega\setminus\gamma^*$,
+\[
+\frac1{2\pi i}\int_\gamma\frac{f(z)}{z-a}\,dz
+=\Ind_\gamma(a)f(a).
+\]
+\end{theorem}
+\src{117}
+\begin{corollary}
+If $f\in H(\Omega)$, then $f^{(n)}\in H(\Omega)$ for every $n\in\NN$.
+If a positively oriented circle $C$ and its interior lie in $\Omega$,
+then, for $z$ in that interior,
+\[
+f^{(n)}(z)=\frac{n!}{2\pi i}\int_C\frac{f(\zeta)}{(\zeta-z)^{n+1}}\,d\zeta.
+\]
+Thus holomorphic functions have infinitely many complex derivatives.
+\end{corollary}
+\src{120}
+\begin{corollary}[Cauchy's inequality]
+If $f$ is holomorphic on an open set containing $\overline{D(z_0,R)}$,
+and $C=\partial D(z_0,R)$, then
+\[
+|f^{(n)}(z_0)|\le\frac{n!}{R^n}\|f\|_{L^\infty(C)},\qquad
+\|f\|_{L^\infty(C)}=\sup_{z\in C}|f(z)|.
+\]
+\end{corollary}
+\src{121}
+\begin{theorem}
+If $f\in H(\Omega)$ and $D$ is a disc centered at $z_0$ with
+$\overline D\subset\Omega$, then, for every $z\in D$,
+\[
+f(z)=\sum_{n=0}^{\infty}a_n(z-z_0)^n,\qquad
+a_n=\frac{f^{(n)}(z_0)}{n!}\quad(n\ge0).
+\]
+\end{theorem}
+Since power series are indefinitely complex differentiable, this
+provides another route to the infinite differentiability of holomorphic functions.
+\src{124}
+\begin{remark}
+The expansion about $z_0$ converges in any disc, however large,
+whose closure lies in $\Omega$. In particular, an entire function
+has an expansion $f(z)=\sum_{n=0}^\infty a_nz^n$ converging on all of $\CC$.
+\end{remark}
+\src{125}
+\begin{theorem}[Concluding equivalences]
+For an open set $\Omega\subseteq\CC$, the following are equivalent:
+\begin{enumerate}
+\item $f\in H(\Omega)$.
+\item $f^{(n)}\in H(\Omega)$ for every $n\ge0$.
+\item On every disc $D$ centered at $z_0$ with $\overline D\subset\Omega$,
+$f(z)=\sum_{n\ge0}a_n(z-z_0)^n$, with $a_n=f^{(n)}(z_0)/n!$.
+\end{enumerate}
+\end{theorem}
+\section{Laurent series}
+\src{126}
+\begin{definition}
+For $0\le s_1<s_2\le+\infty$,
+\[
+A(z_0,s_1,s_2)=\{z:s_1<|z-z_0|<s_2\}
+\]
+is an open annulus. For finite radii, the closed annulus is
+$\overline A(z_0,s_1,s_2)=\{z:s_1\le|z-z_0|\le s_2\}$.
+In the usual positive finite-radius case,
+\begin{align*}
+A(z_0,s_1,s_2)&=D(z_0,s_2)\setminus\overline{D(z_0,s_1)},\\
+\overline A(z_0,s_1,s_2)&=\overline{D(z_0,s_2)}\setminus D(z_0,s_1),\\
+\overline A(z_0,s_1,s_2)&=A(z_0,s_1,s_2)\cup C(z_0,s_1)\cup C(z_0,s_2).
+\end{align*}
+\end{definition}
+\editorial{At radius zero, use the distance definitions;
+the inner boundary degenerates to the center. An infinite radius
+does not give a finite boundary circle.}
+\src{127}
+\begin{definition}
+A \emph{Laurent series} about $z_0$ is
+$\sum_{n\in\ZZ}a_n(z-z_0)^n$. Its convergence means that both
+$\sum_{n\ge0}a_n(z-z_0)^n$ and $\sum_{n<0}a_n(z-z_0)^n$
+converge; its value is their sum. It diverges if either tail diverges.
+\end{definition}
+\src{128}
+\begin{theorem}
+For a Laurent series, put
+\[
+r=\limsup_{n\to\infty}|a_{-n}|^{1/n},\qquad
+R=\left(\limsup_{n\to\infty}|a_n|^{1/n}\right)^{-1}.
+\]
+If $r<R$, the series converges absolutely on $A(z_0,r,R)$,
+uniformly on its compact subsets, and defines a holomorphic function there.
+\end{theorem}
+\src{131}
+\begin{theorem}[Cauchy's formula for annuli]
+Let $0<r_1<r_2<\infty$, and let $f$ be holomorphic on an open
+neighborhood of $\overline A(z_0,r_1,r_2)$. If $\gamma_1,\gamma_2$
+are its positively oriented inner and outer circles, then
+\[
+f(z)=\frac1{2\pi i}\int_{\gamma_2}\frac{f(w)}{w-z}\,dw
+-\frac1{2\pi i}\int_{\gamma_1}\frac{f(w)}{w-z}\,dw
+\quad(z\in A(z_0,r_1,r_2)).
+\]
+\end{theorem}
+\begin{exercise}[Question retained from the omitted argument]
+Explain in what sense Cauchy's integral formula is available
+on the annular region $A(z_0,s_1,s_2)$ with
+$0<s_1<r_1<r_2<s_2$.
+\end{exercise}
+\editorial{Use the annular boundary formula, for example by cutting
+along a radial segment. The assertion that every holomorphic function
+on an annulus has a primitive would be false.}
+\src{133}
+\begin{theorem}[Laurent representation]
+If $f\in H(A(z_0,s_1,s_2))$, there is a unique sequence
+$(a_n)_{n\in\ZZ}$ such that
+\[
+f(z)=\sum_{n=-\infty}^{\infty}a_n(z-z_0)^n.
+\]
+For $s_1<r<s_2$ and $n\in\ZZ$,
+\[
+a_n=\frac1{2\pi i}\int_{C(z_0,r)}
+\frac{f(w)}{(w-z_0)^{n+1}}\,dw.
+\]
+The expansion converges absolutely on the annulus and uniformly
+on its compact subsets.
+\end{theorem}
+\src{138}
+\begin{exercise}[Question retained from the omitted argument]
+Suppose $f(z)=\sum_{n\in\ZZ}c_n(z-z_0)^n$ for every
+$z\in A(z_0,s_1,s_2)$. Why must this series converge uniformly
+on compact subsets of that annulus?
+\end{exercise}
+
+\chapter{Further applications and singularities}
+\lecturedetails{September 22, 2025}{140--165}
+\section{Further applications of Cauchy's formula}
+\src{141}
+\begin{corollary}[Cauchy's inequality, recalled]
+If $f$ is holomorphic on an open neighborhood of $\overline{D(z_0,R)}$
+and $C=\partial D(z_0,R)$, then
+\[
+|f^{(n)}(z_0)|\le n!R^{-n}\|f\|_{L^\infty(C)},\qquad
+\|f\|_{L^\infty(C)}=\sup_{z\in C}|f(z)|.
+\]
+\end{corollary}
+\src{142}
+\begin{theorem}[Liouville]
+Every bounded entire function is constant.
+\end{theorem}
+\begin{theorem}[Fundamental theorem of algebra]
+Every nonconstant polynomial $P(z)=a_nz^n+\cdots+a_1z+a_0$
+with complex coefficients has a root in $\CC$. If its degree is
+$n\ge1$, it has exactly $n$ roots, counted with multiplicity.
+\end{theorem}
+\src{144}
+\begin{theorem}[Morera: converse to Cauchy's theorem]
+If $f$ is continuous on an open set $\Omega\subseteq\CC$ and
+$\int_{\partial\Delta}f(z)\,dz=0$ for every closed triangle
+$\Delta\subset\Omega$, then $f\in H(\Omega)$.
+\end{theorem}
+\src{146}
+\begin{definition}
+The sequence $(f_j)$ converges to $f$ \emph{uniformly on compact subsets}
+of $\Omega$ if for every compact $K\subseteq\Omega$ and $\varepsilon>0$
+there exists $N=N(K,\varepsilon)$ such that
+$\sup_{z\in K}|f_j(z)-f(z)|<\varepsilon$ whenever $j>N$.
+\end{definition}
+\begin{theorem}
+If $(f_j)\subset H(\Omega)$ converges uniformly on compact subsets to $f$,
+then $f\in H(\Omega)$ and $f_j'\to f'$ uniformly on compact subsets.
+\end{theorem}
+\section{Zeros and analytic continuation}
+\src{148}
+\begin{theorem}
+Let $\Omega$ be a region, $f\in H(\Omega)$, and
+$Z(f)=\{a\in\Omega:f(a)=0\}$. Either $Z(f)=\Omega$, or $Z(f)$ has
+no limit point in $\Omega$. In the latter case, for each $a\in Z(f)$
+there is a unique positive integer $m=m(a)$ with
+\[
+f(z)=(z-a)^m g(z)\quad(z\in\Omega),\qquad
+g\in H(\Omega),\quad g(a)\ne0.
+\]
+Moreover, $Z(f)$ is at most countable. The integer $m$ is the
+\emph{order} of the zero at $a$.
+\end{theorem}
+\src{153}
+\begin{theorem}[Identity theorem]
+If $f,g$ are holomorphic on a region $\Omega$ and agree on a set
+having a limit point in $\Omega$, then $f=g$ throughout $\Omega$.
+\end{theorem}
+\begin{definition}
+If $f,F$ are analytic on regions $\Omega,\Omega'$ with
+$\Omega\subseteq\Omega'$ and $F=f$ on $\Omega$, then $F$ is an
+\emph{analytic continuation} of $f$ to $\Omega'$.
+The identity theorem guarantees uniqueness of this continuation.
+\end{definition}
+\src{154--155}
+Let $\Omega$ be open and symmetric about the real axis:
+$z\in\Omega$ if and only if $\bar z\in\Omega$.
+Let $\Omega^+$ and $\Omega^-$ be its upper and lower half-plane
+parts, and set $I=\Omega\cap\RR$. Thus
+$\Omega=\Omega^+\cup I\cup\Omega^-$. The set $I$ is the relative
+interior of the real-axis portion of their common boundary.
+\sourcefigure{p154}{.8}{The symmetric region from slide 154.}
+\begin{theorem}[Symmetry principle]
+If $f^+,f^-$ are holomorphic on $\Omega^+,\Omega^-$, extend continuously
+to $I$, and $f^+(x)=f^-(x)$ there, then
+\[
+f(z)=\begin{cases}
+f^+(z),&z\in\Omega^+,\\
+f^+(z)=f^-(z),&z\in I,\\
+f^-(z),&z\in\Omega^-
+\end{cases}
+\]
+is holomorphic on all of $\Omega$.
+\end{theorem}
+\src{158}
+\begin{theorem}[Schwarz reflection]
+If $f$ is holomorphic on $\Omega^+$, extends continuously to $I$,
+and is real-valued on $I$, then a holomorphic function $F$ on
+$\Omega$ exists with $F=f$ on $\Omega^+$.
+\end{theorem}
+\section{Classification of singularities}
+\src{159}
+\begin{definition}
+If $a\in\Omega$ and $f\in H(\Omega\setminus\{a\})$, then $a$ is an
+\emph{isolated singularity}. It is \emph{removable} if $f$ can be
+defined at $a$ so as to be holomorphic on $\Omega$.
+\end{definition}
+\begin{theorem}[Riemann's removable-singularity theorem]
+If $f\in H(\Omega\setminus\{a\})$ is bounded on a punctured disc
+$D'(a,r)$, then its singularity at $a$ is removable.
+\end{theorem}
+\src{161}
+\begin{theorem}
+For $a\in\Omega$ and $f\in H(\Omega\setminus\{a\})$, exactly one of
+the following occurs:
+\begin{enumerate}
+\item The singularity is removable.
+\item There are $c_1,\ldots,c_m\in\CC$, with $m\ge1$ and $c_m\ne0$,
+such that $f(z)-\sum_{k=1}^m c_k(z-a)^{-k}$ has a removable singularity.
+\item For every $r>0$ with $D(a,r)\subseteq\Omega$,
+$f(D'(a,r))$ is dense in $\CC$.
+\end{enumerate}
+The last conclusion is the Casorati--Weierstrass theorem.
+\end{theorem}
+\src{162}
+\begin{remark}
+In the second case, $f$ has a \emph{pole of order $m$}.
+The polynomial in $(z-a)^{-1}$, $\sum_{k=1}^m c_k(z-a)^{-k}$,
+is its \emph{principal part}; then $|f(z)|\to\infty$ as $z\to a$.
+In the third case, the singularity is \emph{essential}.
+Equivalently, for every $w\in\CC$ there is a sequence
+$z_n\to a$ with $f(z_n)\to w$.
+\end{remark}
+\src{165}
+\begin{remark}
+For the Laurent expansion $f(z)=\sum_{n=-\infty}^\infty a_n(z-z_0)^n$:
+\begin{itemize}
+\item The singularity is removable exactly when $a_n=0$ for every $n<0$.
+\item It is a pole of order $m$ when $m$ is the largest positive
+integer with $a_{-m}\ne0$. A pole of order one is \emph{simple}.
+\item It is essential when infinitely many negative-index coefficients
+are nonzero.
+\item The behavior at infinity is studied using $g(z)=f(1/z)$ near zero.
+The point $\infty$ is an isolated singularity if $f$ is analytic for
+$|z|>r$ for some $r$; its type is the type of $g$ at zero.
+\end{itemize}
+\end{remark}
+
+\chapter{Maximum principle, open mappings, and logarithms}
+\lecturedetails{September 25, 2025}{166--195}
+\section{Maximum modulus and open mappings}
+\src{167}
+\begin{theorem}[Orthogonality relation]
+If $f(z)=\sum_{n\ge0}c_n(z-a)^n$ on $D(a,R)$ and $0<r<R$, then
+\[
+\sum_{n\ge0}|c_n|^2r^{2n}
+=\frac1{2\pi}\int_{-\pi}^{\pi}|f(a+re^{i\theta})|^2\,d\theta.
+\]
+\end{theorem}
+\src{169}
+\begin{definition}
+The modulus $|f|$ has a local maximum at $a\in\Omega$ if some
+$\delta>0$ satisfies $D(a,\delta)\subseteq\Omega$ and
+$|f(a)|\ge|f(z)|$ throughout this disc.
+Having no local maximum means having none at any point of $\Omega$.
+A local minimum is defined with the inequality reversed.
+\end{definition}
+\begin{theorem}[Maximum modulus principle]
+If $\Omega$ is a region and $f\in H(\Omega)$, then $|f|$ has no
+local maximum unless $f$ is constant. If additionally $\overline\Omega$
+is compact and $f$ is continuous on $\overline\Omega$, then
+$\sup_\Omega|f|\le\sup_{\partial\Omega}|f|$.
+\end{theorem}
+\src{172}
+\begin{exercise}[Corollary to prove]
+Let $\Omega$ be a region, $f\in H(\Omega)$, and
+$\overline{D(a,r)}\subset\Omega$. Prove that
+\[
+|f(a)|\le\max_{-\pi\le\theta\le\pi}|f(a+re^{i\theta})|,
+\]
+with equality if and only if $f$ is constant on $\Omega$.
+Deduce the absence of local maxima for nonconstant $|f|$.
+If $f$ has no zero in $D(a,r)$, prove also that
+\[
+|f(a)|\ge\min_{-\pi\le\theta\le\pi}|f(a+re^{i\theta})|.
+\]
+\end{exercise}
+\src{173}
+\begin{lemma}
+If $f\in H(\Omega)$, then
+\[
+g(z,w)=\begin{cases}
+(f(z)-f(w))/(z-w),&z\ne w,\\f'(z),&z=w
+\end{cases}
+\]
+is continuous on $\Omega\times\Omega$.
+\end{lemma}
+\src{175}
+\begin{theorem}
+If $\varphi\in H(\Omega)$ and $\varphi'(z_0)\ne0$, there is a
+neighborhood $V\subseteq\Omega$ of $z_0$ on which $\varphi$ is
+one-to-one, $W=\varphi(V)$ is open, and the inverse
+$\psi:W\to V$, defined by $\psi(\varphi(z))=z$, is holomorphic.
+\end{theorem}
+\src{178}
+\begin{definition}
+For $m\in\NN$, write $\pi_m(z)=z^m$.
+\end{definition}
+Every $w=re^{i\theta}\ne0$ has exactly $m$ distinct preimages:
+\[
+\pi_m(z)=w\quad\Longleftrightarrow\quad
+z=r^{1/m}e^{i(\theta+2k\pi)/m},\quad k=1,\ldots,m.
+\]
+Each $\pi_m$ is open: away from zero use the preceding theorem,
+and at zero use $\pi_m(D(0,r))=D(0,r^m)$.
+Compositions of open maps are open. In particular, $\pi_m\circ\varphi$
+is open when $\varphi'$ has no zero.
+\src{179}
+\begin{theorem}[Local form and open mapping theorem]
+Let $f$ be nonconstant and holomorphic on a region $\Omega$,
+$z_0\in\Omega$, and $w_0=f(z_0)$. If $m$ is the order of the
+zero of $f-w_0$ at $z_0$, there are a neighborhood $V$ of $z_0$
+and $\varphi\in H(V)$ such that
+\[
+f(z)=w_0+\varphi(z)^m.
+\]
+Moreover, $\varphi'$ has no zero on $V$, and $\varphi$ maps
+$V$ invertibly onto a disc $D(0,r)$.
+\end{theorem}
+\begin{remark}
+Thus $f-w_0=\pi_m\circ\varphi$ locally.
+The map $f:V\setminus\{z_0\}\to D'(w_0,r^m)$ is exactly $m$-to-one.
+Every $w_0\in f(\Omega)$ is an interior point, so $f(\Omega)$ is open.
+\end{remark}
+\src{181}
+\begin{theorem}[Inverse mapping theorem]
+If $f\in H(\Omega)$ is one-to-one on a region $\Omega$, then
+$f'(z)\ne0$ everywhere and $f^{-1}$ is holomorphic.
+\end{theorem}
+\begin{remark}
+The converse is false: $f(z)=e^z$ has nonvanishing derivative
+everywhere but is not one-to-one on $\CC$.
+\end{remark}
+\section{Logarithms and continuous arguments}
+\src{182}
+The exponential restricted to $S_\alpha=\{x+iy:\alpha\le y<\alpha+2\pi\}$
+is a bijection onto $\CC\setminus\{0\}$.
+\begin{definition}
+Its inverse is $\log_\alpha$, and $\arg_\alpha=\Im\log_\alpha$.
+Thus $\log_\alpha(e^z)=z$ on $S_\alpha$ and
+$e^{\log_\alpha z}=z$ for $z\ne0$.
+The principal branches used here are
+$\operatorname{Log}=\log_{-\pi}$ and $\operatorname{Arg}=\arg_{-\pi}$.
+\end{definition}
+\src{183}
+\begin{theorem}
+\begin{enumerate}
+\item For $z\ne0$, $\log_\alpha z=\log|z|+i\arg_\alpha z$,
+where $\arg_\alpha z$ is the unique argument in $[\alpha,\alpha+2\pi)$;
+equivalently $z/|z|=e^{i\arg_\alpha z}$.
+\item Set $R_\alpha=\{re^{i\alpha}:r\ge0\}$. The two functions are
+continuous on $\CC\setminus R_\alpha$ and discontinuous on the
+nonzero part of the slit.
+\item $\log_\alpha$ is analytic on $\CC\setminus R_\alpha$ and
+$(\log_\alpha)'(z)=1/z$.
+\end{enumerate}
+\end{theorem}
+\editorial{Neither function is defined at zero. The half-closed strip
+is not an open domain of holomorphy; the exponential is the restriction
+of an entire function.}
+\src{185}
+\begin{theorem}[Recalled inverse criterion]
+Let $g$ be analytic on $\Omega_1$ and $f$ continuous on the open set
+$\Omega$. If $f(\Omega)\subseteq\Omega_1$, $g'$ is nowhere zero,
+and $g(f(z))=z$, then $f$ is analytic and
+$f'=1/(g'\circ f)$. The identity also makes $f$ one-to-one.
+\end{theorem}
+\src{186}
+\begin{definition}
+Let $S\subseteq\CC$, or more generally let $S$ be a metric space,
+and let $f:S\to\CC\setminus\{0\}$ be continuous.
+A continuous logarithm is a continuous $g:S\to\CC$ with $f=e^g$.
+A continuous argument is a continuous $\theta:S\to\RR$ with
+$f=|f|e^{i\theta}$.
+\end{definition}
+\begin{example}
+\begin{enumerate}
+\item On $S=[0,2\pi]$, $f(s)=e^{is}$ has continuous arguments
+$\theta(s)=s+2k\pi$ for any fixed integer $k$.
+\item If $f:S\to\CC\setminus R_\alpha$ is continuous,
+$\theta=\arg_\alpha\circ f$ is a continuous argument.
+\item On $S=\{z:|z|=1\}$, $f(z)=z$ has no continuous argument.
+\end{enumerate}
+\end{example}
+\src{187}
+\begin{theorem}
+For continuous nonvanishing $f:S\to\CC$:
+\begin{enumerate}
+\item If $g$ is a continuous logarithm, $\Im g$ is a continuous argument.
+\item If $\theta$ is a continuous argument, $\log|f|+i\theta$ is a
+continuous logarithm. Thus either exists if and only if the other does.
+\item On connected $S$, any two continuous logarithms differ by
+$2\pi ik$ for one fixed $k\in\ZZ$; any two continuous arguments
+differ by $2\pi l$ for one fixed $l\in\ZZ$.
+\item If $S$ is connected and $s,t\in S$, any continuous logarithm $g$
+and argument $\theta$ satisfy
+\[
+g(s)-g(t)=\log|f(s)|-\log|f(t)|+i(\theta(s)-\theta(t)).
+\]
+\end{enumerate}
+\end{theorem}
+\src{189}
+\begin{theorem}
+Every continuous curve $\gamma:[a,b]\to\CC\setminus\{0\}$
+has a continuous argument and hence a continuous logarithm.
+\end{theorem}
+\src{190}
+\begin{theorem}
+For a closed curve $\gamma:[a,b]\to\CC$, $z_0\notin\gamma^*$,
+and any continuous argument $\theta$ of $\gamma-z_0$,
+$\theta(b)-\theta(a)$ is an integer multiple of $2\pi$ and
+is independent of the choice of $\theta$.
+\end{theorem}
+\src{191}
+\begin{definition}
+The winding number is $W(\gamma,z_0)=(\theta(b)-\theta(a))/(2\pi)$.
+\end{definition}
+\begin{remark}
+It is well-defined by the preceding theorem. Intuitively it is the
+net number of revolutions about $z_0$ as the parameter runs from
+$a$ to $b$. It is translation-invariant:
+$W(\gamma,z_0)=W(\gamma+w,z_0+w)$ for every $w\in\CC$.
+\end{remark}
+\src{192}
+\begin{theorem}
+For a closed path,
+\[
+W(\gamma,z_0)=\frac1{2\pi i}\int_\gamma\frac{dz}{z-z_0}
+=\Ind_\gamma(z_0).
+\]
+More generally, if $f$ is analytic on a neighborhood of $\gamma^*$
+and $z_0\notin(f\circ\gamma)^*$, then
+\[
+W(f\circ\gamma,z_0)=\frac1{2\pi i}
+\int_\gamma\frac{f'(z)}{f(z)-z_0}\,dz.
+\]
+\end{theorem}
+
+\chapter{Global Cauchy's theorem}
+\lecturedetails{October 2, 2025}{196--225}
+\section{Chains and cycles}
+\src{197--198}
+For paths $\gamma_1,\ldots,\gamma_n$, put $K=\bigcup_i\gamma_i^*$.
+On the vector space $C(K)$ of continuous functions on $K$, each
+path induces the linear functional
+$\widetilde\gamma_i(f)=\int_{\gamma_i}f(z)\,dz$.
+Define $\widetilde\Gamma=\sum_i\widetilde\gamma_i$; explicitly
+$\widetilde\Gamma(f)=\sum_i\widetilde\gamma_i(f)$.
+This motivates the formal sum $\Gamma=\gamma_1\dotplus\cdots\dotplus\gamma_n$
+and the definition
+\[
+\int_\Gamma f(z)\,dz=\widetilde\Gamma(f)=\sum_{i=1}^n\int_{\gamma_i}f(z)\,dz.
+\]
+\begin{definition}
+Such a formal sum is a \emph{chain} in $\Omega$ if each $\gamma_i^*\subset\Omega$.
+It is a \emph{cycle} if it has a representation in which every
+$\gamma_i$ is closed. Equivalently, the initial and terminal endpoints
+in any representation can be paired. For the displayed representation,
+write $\Gamma^*=\bigcup_i\gamma_i^*$.
+\end{definition}
+The sum is meaningful as addition of functionals, not as pointwise
+addition of paths. The endpoint criterion follows from a combinatorial argument.
+\src{199--200}
+For a cycle and $\alpha\notin\Gamma^*$, set
+\[
+\Ind_\Gamma(\alpha)=\frac1{2\pi i}\int_\Gamma\frac{dz}{z-\alpha}
+=\sum_i\Ind_{\gamma_i}(\alpha).
+\]
+Replacing each path by its opposite gives $-\Gamma$; then
+$\int_{-\Gamma}f=-\int_\Gamma f$, and
+$\Ind_{-\Gamma}(\alpha)=-\Ind_\Gamma(\alpha)$.
+Chains can be added or subtracted through their functionals.
+For integers $k_1,k_2$,
+\[
+\Gamma=k_1\Gamma_1\dotplus k_2\Gamma_2
+\quad\Longrightarrow\quad
+\int_\Gamma f=k_1\int_{\Gamma_1}f+k_2\int_{\Gamma_2}f
+\]
+for every $f$ continuous on $\Gamma_1^*\cup\Gamma_2^*$.
+Chains can have many representations: equality of
+$\sum_i\gamma_i$ and $\sum_j\delta_j$ means equality of
+$\sum_i\int_{\gamma_i}f$ and $\sum_j\int_{\delta_j}f$
+for every continuous $f$ on the union of all the path images.
+In particular, a cycle can be represented by paths that are not closed.
+\section{Global integral theorem and formula}
+\src{201}
+\begin{theorem}
+Let $f\in H(\Omega)$ for an arbitrary open $\Omega\subseteq\CC$.
+If a cycle $\Gamma$ in $\Omega$ satisfies
+$\Ind_\Gamma(\alpha)=0$ for every $\alpha\notin\Omega$, then
+\[
+f(z)\Ind_\Gamma(z)=\frac1{2\pi i}\int_\Gamma\frac{f(w)}{w-z}\,dw
+\quad(z\in\Omega\setminus\Gamma^*),\qquad \int_\Gamma f(z)\,dz=0.
+\]
+If cycles $\Gamma_0,\Gamma_1$ have equal indices at every
+$\alpha\notin\Omega$, then $\int_{\Gamma_0}f=\int_{\Gamma_1}f$.
+\end{theorem}
+\src{206}
+\begin{corollary}
+For a cycle $\Gamma$ in an open set $\Omega$, the following are equivalent:
+\begin{enumerate}
+\item The preceding Cauchy integral formula holds for every $f\in H(\Omega)$.
+\item $\int_\Gamma f(z)\,dz=0$ for every $f\in H(\Omega)$.
+\item $\Ind_\Gamma(\alpha)=0$ for every $\alpha\in\CC\setminus\Omega$.
+\end{enumerate}
+\end{corollary}
+\editorial{The universal quantifier on $f$ is essential. The slide
+introduces one $f$ before the equivalence, but the assertion is false
+for a single fixed function, for example $f=0$.}
+\src{208--210}
+\begin{remark}
+In a convex region $\Omega$, apply the convex Cauchy theorem to
+$(z-\alpha)^{-1}$, $\alpha\notin\Omega$, to obtain
+$\Ind_\gamma(\alpha)=0$. Thus every cycle there satisfies the
+global hypothesis, which generalizes the earlier convex results.
+An efficient way to compute index is the winding number:
+\[
+W(\gamma,z_0)=\frac{\theta_{z_0}(b)-\theta_{z_0}(a)}{2\pi}
+=\frac1{2\pi i}\int_\gamma\frac{dw}{w-z_0}
+=\Ind_\gamma(z_0).
+\]
+It counts net turns. Each anticlockwise loop increases the argument
+divided by $2\pi$ by one, and each clockwise loop decreases it by one.
+The last part of the theorem specifies when one integration cycle
+can be replaced by another without changing the integral.
+\end{remark}
+\src{211}
+\begin{example}
+For the illustrated path in $U$ and $f\in H(U)$,
+$\Ind_\gamma(z_1)=\Ind_\gamma(z_2)=\Ind_\gamma(z_3)=1$.
+Taking small anticlockwise circles about these points gives
+$\int_\gamma f=\int_{\gamma_1}f+\int_{\gamma_2}f+\int_{\gamma_3}f$.
+\sourcefigure{p211}{.72}{First cycle-deformation example.}
+\end{example}
+\src{212}
+\begin{example}
+In $\CC\setminus\{z_1,z_2,z_3\}$, the second illustrated path has
+indices $1,2,2$. For positively oriented small circles and holomorphic $f$,
+$\int_\gamma f=\int_{\gamma_1}f+2\int_{\gamma_2}f+2\int_{\gamma_3}f$.
+\sourcefigure{p212}{.9}{Second cycle-deformation example.}
+\end{example}
+\src{213}
+\begin{example}
+In $\CC\setminus\{z_1,z_2,z_3,z_4\}$, the third path has indices
+$-1,-2,-1,-2$. Using positively oriented small circles,
+\[
+\int_\gamma f=-\int_{\gamma_1}f-2\int_{\gamma_2}f
+-\int_{\gamma_3}f-2\int_{\gamma_4}f.
+\]
+\sourcefigure{p213}{.95}{Third cycle-deformation example.}
+\end{example}
+\editorial{Slide 213 calls the small circles clockwise, but its arrows
+and negative coefficients use anticlockwise circles. With clockwise
+small circles, all four coefficients in the formula become positive.}
+\src{214}
+Recall the annular formula used for Laurent expansions.
+\begin{theorem}
+For $f$ analytic near $\overline A(z_0,r_1,r_2)$, and positively oriented
+inner and outer circles $\gamma_1,\gamma_2$,
+\[
+f(z)=\frac1{2\pi i}\int_{\gamma_2}\frac{f(w)}{w-z}\,dw
+-\frac1{2\pi i}\int_{\gamma_1}\frac{f(w)}{w-z}\,dw
+\quad(r_1<|z-z_0|<r_2).
+\]
+\end{theorem}
+\section{Homotopy and simple connectivity}
+\src{215}
+\begin{definition}
+Closed curves $\gamma_0,\gamma_1:[0,1]\to X$ are $X$-\emph{homotopic}
+if a continuous $H:[0,1]^2\to X$ satisfies
+\[
+H(s,0)=\gamma_0(s),\quad H(s,1)=\gamma_1(s),\quad H(0,t)=H(1,t).
+\]
+The curves $\gamma_t(s)=H(s,t)$ form a one-parameter family
+continuously deforming one curve into the other inside $X$.
+A curve homotopic to a constant curve is \emph{null-homotopic}.
+\end{definition}
+\src{216}
+\begin{definition}
+A connected space $X$ is \emph{simply connected} if every closed
+curve in $X$ is null-homotopic.
+\end{definition}
+\begin{example}
+Every convex region is simply connected: fix $z_1\in\Omega$
+and set $H(s,t)=(1-t)\gamma_0(s)+tz_1$.
+\end{example}
+\begin{lemma}
+For closed paths $\gamma_0,\gamma_1:[0,1]\to\CC$, if
+$|\gamma_1(s)-\gamma_0(s)|<|\alpha-\gamma_0(s)|$ for all $s$,
+then $\Ind_{\gamma_1}(\alpha)=\Ind_{\gamma_0}(\alpha)$.
+\end{lemma}
+\src{220}
+\begin{theorem}
+$\Omega$-homotopic closed paths in a region $\Omega$ have equal
+indices at every point outside $\Omega$.
+\end{theorem}
+\src{224}
+\begin{theorem}
+In a simply connected region $\Omega$, every closed path $\Gamma$
+has $\Ind_\Gamma(\alpha)=0$ for $\alpha\notin\Omega$.
+For continuous closed curves, the same assertion uses winding number.
+\end{theorem}
+\src{225}
+\begin{remark}
+The global Cauchy theorem therefore applies in simply connected regions.
+For $\Omega$-homotopic closed paths, equality of their outside indices
+combined with the global theorem gives
+$\int_{\Gamma_0}f(z)\,dz=\int_{\Gamma_1}f(z)\,dz$ for $f\in H(\Omega)$.
+\end{remark}
+
+\chapter{Analytic branches of the logarithm}
+\lecturedetails{October 6, 2025}{226--248}
+\section{Branches and arguments, recalled}
+\src{227--228}
+The exponential on $S_\alpha=\{x+iy:\alpha\le y<\alpha+2\pi\}$
+is a bijection onto $\CC\setminus\{0\}$. Its inverse is $\log_\alpha$,
+with $\arg_\alpha=\Im\log_\alpha$.
+Thus $\log_\alpha(e^z)=z$ on this strip and $e^{\log_\alpha z}=z$ for $z\ne0$.
+The principal branches are $\operatorname{Log}=\log_{-\pi}$ and
+$\operatorname{Arg}=\arg_{-\pi}$.
+\begin{theorem}
+For $z\ne0$, $\log_\alpha z=\log|z|+i\arg_\alpha z$,
+where $\arg_\alpha z\in[\alpha,\alpha+2\pi)$ is uniquely determined by
+$z/|z|=e^{i\arg_\alpha z}$.
+On the slit plane $\CC\setminus R_\alpha$, with
+$R_\alpha=\{re^{i\alpha}:r\ge0\}$, both functions are continuous,
+and $\log_\alpha$ is analytic with derivative $1/z$.
+They are discontinuous at each nonzero point of the slit.
+\end{theorem}
+\src{230}
+\begin{theorem}[Recalled inverse criterion]
+If $g$ is analytic on $\Omega_1$, $g'\ne0$, $f$ is continuous on
+open $\Omega$, $f(\Omega)\subseteq\Omega_1$, and $g(f(z))=z$,
+then $f$ is analytic, one-to-one, and $f'=1/(g'\circ f)$.
+\end{theorem}
+\section{Analytic logarithms and powers}
+\src{231}
+\begin{definition}
+For analytic $f$ on $\Omega$, an \emph{analytic logarithm} is an
+analytic function $g$ on $\Omega$ such that $e^{g(z)}=f(z)$.
+\end{definition}
+\begin{remark}
+The exponential is not injective on $\CC$, so logarithms require a
+branch. Also, $f$ must be nonvanishing since an exponential is never zero.
+On $A=\{z:1/2<|z|<2\}$ there is no analytic $g$ with $e^{g(z)}=z$:
+differentiation would give $g'(z)e^{g(z)}=1$, hence $g'=1/z$,
+but $1/z$ has no primitive on this annulus.
+\end{remark}
+\editorial{The slide concludes that the domain cannot have holes.
+More precisely, holes can obstruct a logarithm of a particular function;
+some functions, such as $f=1$, have logarithms on every domain.}
+\src{232}
+\begin{theorem}
+If $\Omega$ is a simply connected region with $1\in\Omega$ and
+$0\notin\Omega$, there is a branch $F=\log_\Omega$ which is holomorphic,
+satisfies $e^{F(z)}=z$, and agrees with $\log r$ for positive real
+$r$ sufficiently near $1$. Thus this branch extends the standard
+real logarithm locally near $1$.
+\end{theorem}
+\src{235--236}
+\sourcefigure{p235}{.78}{Principal branch of the logarithm on the slit plane (source slide 235).}
+\begin{example}
+On $\Omega=\CC\setminus(-\infty,0]$, write $z=re^{i\theta}$ with
+$|\theta|<\pi$. The principal branch is $\log z=\log r+i\theta$.
+The integration path consists of the real segment from $1$ to $r$
+followed by the circular arc $\eta$ from $r$ to $z$:
+\[
+\log z=\int_1^r\frac{dx}{x}+\int_\eta\frac{dw}{w}
+=\log r+\int_0^\theta\frac{ire^{it}}{re^{it}}\,dt
+=\log r+i\theta.
+\]
+In general $\log(z_1z_2)\ne\log z_1+\log z_2$.
+For $z_1=z_2=e^{2\pi i/3}$, their logarithms are $2\pi i/3$,
+whereas $z_1z_2=e^{-2\pi i/3}$ and $\log(z_1z_2)=-2\pi i/3$.
+\end{example}
+\src{237}
+For the principal branch, the Taylor expansion is
+\[
+\log(1+z)=z-\frac{z^2}{2}+\frac{z^3}{3}-\cdots
+=\sum_{n=1}^\infty\frac{(-1)^{n+1}}n z^n,\qquad |z|<1.
+\]
+Both sides have derivative $1/(1+z)$ and value zero at zero.
+\src{238}
+On such a simply connected domain, choose $\log1=0$ and define,
+for any $\alpha\in\CC$, $z^\alpha=e^{\alpha\log z}$.
+Then $1^\alpha=1$. For $\alpha=1/n$,
+\[
+(z^{1/n})^n=\prod_{k=1}^n e^{(\log z)/n}
+=e^{\sum_{k=1}^n(\log z)/n}=e^{\log z}=z.
+\]
+\src{239}
+\begin{theorem}
+Every nowhere-vanishing holomorphic function $f$ on a simply connected
+region $\Omega$ has a holomorphic logarithm $g$, so that $f=e^g$.
+The function $g$ may be denoted $\log f$ and determines a branch.
+\end{theorem}
+\src{241}
+\begin{theorem}[Equivalent global Cauchy properties]
+For a region $\Omega$, the following are equivalent:
+\begin{enumerate}[label=(\Alph*)]
+\item Every closed path $\gamma$ has $\Ind_\gamma(z)=0$ for $z\notin\Omega$.
+\item $\int_\gamma f(w)\,dw=0$ for every closed path and every $f\in H(\Omega)$.
+\item Every $f\in H(\Omega)$ has a primitive $F\in H(\Omega)$.
+\item Every $f\in H(\Omega)$ with $1/f\in H(\Omega)$ can be written $f=e^g$
+for some $g\in H(\Omega)$.
+\item Every such $f$ can be written $f=g^2$ for some $g\in H(\Omega)$.
+\end{enumerate}
+\end{theorem}
+
+% NEXT CHAPTER
+\chapter{Meromorphic functions and residues}
+\lecturedetails{October 9, 2025}{249--275}
+\section{Meromorphic functions}
+\src{250}
+\begin{definition}
+A function $f$ is meromorphic on an open set $\Omega$ if there is a set
+$A\subset\Omega$ with no limit point in $\Omega$, such that
+$f\in H(\Omega\setminus A)$ and $f$ has a pole at each point of $A$.
+\end{definition}
+\begin{remark}
+$A=\varnothing$ is allowed, so every holomorphic function is meromorphic.
+No compact subset contains infinitely many points of $A$; hence $A$ is
+at most countable, since open subsets of $\CC$ are $\sigma$-compact.
+\end{remark}
+\src{251}
+\begin{definition}
+If $a$ is a pole and $Q(z)=\sum_{k=1}^m c_k(z-a)^{-k}$ is the principal
+part (so $f-Q$ is removable at $a$), then
+$\Res(f;a)=c_1$. For a cycle avoiding $a$,
+\[
+\frac1{2\pi i}\int_\Gamma Q(z)\,dz
+=c_1\Ind_\Gamma(a).
+\]
+\end{definition}
+\src{252}
+\begin{theorem}[Residue theorem]
+If $f$ is meromorphic on $\Omega$, $A$ is its pole set, and
+$\Gamma$ is a cycle in $\Omega\setminus A$ with
+$\Ind_\Gamma(\alpha)=0$ for $\alpha\notin\Omega$, then
+\[
+\frac1{2\pi i}\int_\Gamma f(z)\,dz
+=\sum_{a\in A}\Res(f;a)\Ind_\Gamma(a).
+\]
+Only finitely many terms are nonzero.
+\end{theorem}
+\section{Argument principle and Rouche}
+\src{254--257}
+\begin{theorem}[Argument principle and Rouche's theorem]
+Let $\gamma$ be a closed path in a region $\Omega$, with zero index
+outside $\Omega$, and with index $0$ or $1$ on $\Omega\setminus\gamma^*$.
+Let $\Omega_1=\{\alpha:\Ind_\gamma(\alpha)=1\}$, and let $N_f$ count
+zeros in $\Omega_1$ with multiplicity.
+If $f\in H(\Omega)$ has no boundary zero, then
+\[
+N_f=\frac1{2\pi i}\int_\gamma\frac{f'(z)}{f(z)}\,dz
+=\Ind_{f\circ\gamma}(0).
+\]
+If $g\in H(\Omega)$ and $|f-g|<|f|$ on $\gamma^*$, then $N_g=N_f$.
+\end{theorem}
+\begin{remark}
+Rouche's theorem preserves the number of zeros when two holomorphic
+functions are sufficiently close on the boundary.
+\end{remark}
+\begin{example}
+For $g(z)=z^{87}+36z^{57}+71z^4+z^3-z+1$, take $f(z)=71z^4$.
+On $|z|=1$,
+\[
+|f-g|\le1+36+1+1+1<71=|f|.
+\]
+Thus $g$ has four zeros in $|z|<1$, counted with multiplicity.
+\end{example}
+\section{Contour examples}
+\src{259--262}
+\begin{example}
+\[
+\lim_{A\to\infty}\int_{-A}^{A}\frac{\sin x}{x}e^{itx}\,dx
+=\begin{cases}\pi,&|t|<1,\\0,&|t|>1,\end{cases}
+\]
+and the value is $\pi/2$ when $t=\pm1$. Using
+$2i\sin z=e^{iz}-e^{-iz}$ on the indented contour $\Gamma_A$ gives
+\[
+\int_{\Gamma_A}\frac{\sin z}{z}e^{itz}\,dz
+=\phi_A(t+1)-\phi_A(t-1),
+\quad
+\phi_A(s)=\frac1{2\pi i}\int_{\Gamma_A}\frac{e^{isz}}z\,dz.
+\]
+Closing in the lower and upper half-planes gives
+\[
+\phi_A(s)=\frac1{2\pi}\int_{-\pi}^0e^{isAe^{i\theta}}d\theta,
+\qquad
+\phi_A(s)=1-\frac1{2\pi}\int_0^\pi e^{isAe^{i\theta}}d\theta.
+\]
+Since $e^{isAe^{i\theta}}=e^{-As\sin\theta}$, dominated convergence yields
+$\phi_A(s)\to0$ for $s<0$ and $\to\pi$ for $s>0$; also
+$\phi_A(0)=\pi/2$.
+\end{example}
+\src{263--265}
+\begin{example}
+\[
+\int_{-\infty}^{\infty}\frac{dx}{1+x^2}=\pi.
+\]
+For $f(z)=(1+z^2)^{-1}$, the upper semicircle encloses $i$ and
+\[
+f(z)=\frac1{2i(z-i)}-\frac1{2i(z+i)},\qquad \Res(f;i)=\frac1{2i}.
+\]
+The contour integral is $\pi$, while the arc is bounded by $M/R\to0$.
+\end{example}
+\src{266--269}
+\begin{example}
+For $0<a<1$,
+\[
+\int_{-\infty}^{\infty}\frac{e^{ax}}{1+e^x}\,dx=\frac{\pi}{\sin\pi a}.
+\]
+Use $f(z)=e^{az}/(1+e^z)$ on a rectangle of height $2\pi$.
+The sole pole is $\pi i$, with residue $-e^{a\pi i}$. If $I_R$ is
+the bottom integral and the vertical sides vanish, the top is
+$-e^{2\pi ia}I_R$, so
+\[
+(1-e^{2\pi ia})I=-2\pi i e^{a\pi i}
+\quad\Longrightarrow\quad I=\frac{\pi}{\sin\pi a}.
+\]
+\end{example}
+\src{270--275}
+\begin{example}
+\[
+\int_{-\infty}^{\infty}\frac{e^{-2\pi ix\xi}}{\cosh\pi x}\,dx
+=\frac1{\cosh\pi\xi}.
+\]
+Here $\cosh z=(e^z+e^{-z})/2$.
+Use $f(z)=e^{-2\pi iz\xi}/\cosh\pi z$ on a rectangle of height $2i$.
+The poles are $\alpha=i/2$ and $\beta=3i/2$, with residues
+$e^{\pi\xi}/(\pi i)$ and $-e^{3\pi\xi}/(\pi i)$. The vertical sides
+vanish, the top is $-e^{4\pi\xi}I$, and the residue theorem gives
+$I=1/\cosh(\pi\xi)$.
+\end{example}
+\begin{remark}
+The same method gives
+\[
+\int_\RR\frac{e^{-2\pi ix\xi}}{\cosh\pi x+\cos\pi a}\,dx
+=\frac{\sin\pi a}{\sinh(2\pi\xi)}
+\]
+in the source's stated parameter range, with
+$\sinh z=(e^z-e^{-z})/2$.
+\end{remark}
+
+\chapter{Phragmen--Lindelof and harmonic analysis}
+\lecturedetails{October 13, 2025}{276--303}
+\section{Phragmen--Lindelof method}
+\src{277--280}
+\begin{remark}
+The maximum modulus principle fails on unbounded sets. On
+$\Omega=\{x+iy:-\pi/2<y<\pi/2\}$, $f(z)=\exp(\exp z)$ has boundary
+modulus $1$ but $f(x)=e^{e^x}\to\infty$. Growth control replaces
+boundedness in Phragmen--Lindelof arguments. For example, an entire
+function satisfying $|f(z)|\le1+|z|^{1/2}$ is constant.
+\end{remark}
+\begin{theorem}[Strip Phragmen--Lindelof]
+Let $\Omega=\{x+iy:a<x<b\}$, with $f$ continuous and holomorphic
+and $|f|<B$. Set $M(x)=\sup_y|f(x+iy)|$. Then
+\[
+M(x)^{b-a}\le M(a)^{b-x}M(b)^{x-a},\qquad a\le x\le b.
+\]
+\end{theorem}
+\src{287}
+\begin{corollary}
+If the preceding assumptions hold and $f$ is nonconstant, then
+$|f(z)|<\max(M(a),M(b))$ in $\Omega$.
+\end{corollary}
+\src{288}
+\begin{theorem}[Hadamard three-circle theorem]
+For $0<R_1<R_2$, let $g$ be holomorphic on the annulus and
+$B(R)=\max_{|z|=R}|g(z)|$. Then
+\[
+B(R)^{\log R_2-\log R_1}
+\le B(R_1)^{\log R_2-\log R}B(R_2)^{\log R-\log R_1}.
+\]
+\end{theorem}
+\src{291}
+\begin{theorem}[Strip application]
+If $|\Im z|<\pi/2$, $f$ is holomorphic and continuous there, and
+$|f(x+iy)|<\exp(Ae^{\alpha|x|})$ for $\alpha<1$, while
+$|f(x\pm\pi i/2)|\le1$, then $|f(z)|\le1$ throughout the strip.
+\end{theorem}
+\begin{remark}
+The conclusion fails at the critical growth $\alpha=1$, as
+$\exp(\exp z)$ demonstrates.
+\end{remark}
+\section{Interpolation and convolution}
+\src{294--301}
+\begin{theorem}[Riesz interpolation]
+For $\sigma$-finite measure spaces $(X,\mu),(Y,\nu)$, let $T$ be linear
+on finitely simple functions and suppose
+\[
+\|Tf\|_{q_j}\le M_j\|f\|_{p_j},\quad j=0,1.
+\]
+For $0<\theta<1$, define
+\[
+\frac1p=\frac{1-\theta}{p_0}+\frac{\theta}{p_1},\qquad
+\frac1q=\frac{1-\theta}{q_0}+\frac{\theta}{q_1}.
+\]
+Then $\|Tf\|_q\le M_0^{1-\theta}M_1^\theta\|f\|_p$.
+\end{theorem}
+\begin{remark}
+Finitely simple functions are dense in $L^p$ for $p<\infty$ on
+$\sigma$-finite spaces, yielding a unique bounded extension.
+\end{remark}
+\begin{lemma}[Three-lines lemma]
+If $F$ is analytic in $0<\Re z<1$, bounded and continuous on the
+closure, with $|F|\le B_0$ on $\Re z=0$ and $|F|\le B_1$ on $\Re z=1$,
+then $|F(z)|\le B_0^{1-\theta}B_1^\theta$ on $\Re z=\theta$.
+\end{lemma}
+\begin{exercise}
+Prove the three-lines lemma.
+\end{exercise}
+\src{302--303}
+\begin{theorem}[Young's convolution inequality]
+If $1\le p,q,r\le\infty$ and $1+1/q=1/p+1/r$, then
+\[
+\|f*g\|_{L^q(\RR)}\le\|f\|_{L^p(\RR)}\|g\|_{L^r(\RR)},
+\quad
+(f*g)(x)=\int_\RR f(x-y)g(y)\,dy.
+\]
+\end{theorem}
+\begin{exercise}
+For fixed $g\in L^r$, verify directly that convolution maps
+$L^1$ to $L^r$ and $L^{r'}$ to $L^\infty$ with the stated norms,
+then derive Young's inequality by interpolation.
+\end{exercise}
+
+\chapter{The Fourier transform}
+\lecturedetails{October 16, 2025}{304--327}
+\src{305--307}
+\begin{definition}
+For $a>0$, let $\mathcal F_a$ be the class of functions holomorphic on
+$S_a=\{z:|\Im z|<a\}$ and satisfying a uniform exponential bound
+of the form $|f(x+iy)|\le C e^{-b|x|}$ on every narrower strip
+$|\Im z|\le b<a$. Such bounds imply the corresponding bounds for all
+derivatives by Cauchy's formula.
+\end{definition}
+\src{308--311}
+\begin{theorem}
+If $f\in\mathcal F_a$, then for each $0<b<a$ there is $B$ such that
+\[
+|\widehat f(\xi)|\le B e^{-2\pi b|\xi|},\qquad
+\widehat f(\xi)=\int_\RR f(x)e^{-2\pi ix\xi}\,dx.
+\]
+\end{theorem}
+The proof shifts the real contour to $\Im z=-b$ for $\xi>0$
+and to $\Im z=b$ for $\xi<0$; the vertical sides vanish by the
+exponential estimates.
+\src{312--318}
+\begin{remark}
+The transform has rapid decay. The Fourier inversion formula is
+\[
+f(x)=\int_\RR\widehat f(\xi)e^{2\pi ix\xi}\,d\xi
+\]
+under the source's decay hypotheses. The auxiliary identity used is
+\[
+\int_\RR\frac{\sin(A\xi)}{\xi}\,d\xi
+=\pi\,\operatorname{sgn}(A).
+\]
+\end{remark}
+\begin{theorem}[Poisson summation]
+For $f$ in the source class,
+\[
+\sum_{n\in\ZZ}f(n)=\sum_{n\in\ZZ}\widehat f(n).
+\]
+\end{theorem}
+\src{323--327}
+\begin{remark}
+The Gaussian identity gives the theta transformation. For $t>0$,
+\[
+\vartheta(t)=\sum_{n\in\ZZ}e^{-\pi tn^2},\qquad
+\vartheta(t)=t^{-1/2}\vartheta(1/t).
+\]
+\end{remark}
+\begin{theorem}[Paley--Wiener type statement]
+If $|\widehat f(\xi)|\le Ae^{-2\pi a|\xi|}$, then
+\[
+f(z)=\int_\RR\widehat f(\xi)e^{2\pi i\xi z}\,d\xi
+\]
+defines a holomorphic function in the strip $|\Im z|<a$.
+\end{theorem}
+
+\chapter{Conformal mappings}
+\lecturedetails{October 20, 2025}{328--359}
+\src{329--331}
+\begin{definition}
+A conformal map $\Omega_1\to\Omega_2$ is a one-to-one holomorphic map
+onto $\Omega_2$ with nonzero derivative. It is an analytic homeomorphism,
+preserving oriented angles and infinitesimal shapes.
+\end{definition}
+\src{332--339}
+\begin{theorem}
+The Cayley map
+\[
+F(z)=\frac{i-z}{i+z}
+\]
+conformally maps the upper half-plane $\HH$ onto the unit disc $\DD$.
+\end{theorem}
+\begin{theorem}
+For $n\ge1$, the map $z\mapsto z^n$ conformally maps
+$\{0<\arg z<\pi/n\}$ onto $\HH$.
+\end{theorem}
+\begin{theorem}
+The map $z\mapsto z^2$ conformally maps the upper half-disc onto
+the first quadrant. The exponential maps $\HH$ conformally onto
+the horizontal strip $\{0<\Im z<\pi\}$.
+\end{theorem}
+\src{340--350}
+\begin{theorem}[Schwarz lemma]
+If $f\in H(\DD)$, $|f|\le1$, and $f(0)=0$, then $|f(z)|\le|z|$.
+If equality holds at a nonzero point, $f(z)=\lambda z$, $|\lambda|=1$.
+\end{theorem}
+\begin{definition}
+\[
+\varphi_a(z)=\frac{a-z}{1-\bar az},\qquad a\in\DD.
+\]
+\end{definition}
+\begin{remark}
+The maps $\varphi_a$ are disc automorphisms, satisfy
+$\varphi_a^{-1}=\varphi_a$, and preserve the disc. Schwarz's lemma
+applied after these automorphisms gives
+\[
+|f'(w)|\le\frac{1-|f(w)|^2}{1-|w|^2}.
+\]
+\end{remark}
+\begin{theorem}
+If $f$ is an automorphism of $\DD$ and $f(w)=0$, then
+$f=\lambda\varphi_w$ for some $|\lambda|=1$.
+\end{theorem}
+\src{351--359}
+\begin{definition}
+\[
+\mathrm{SL}_2(\RR)=\left\{\begin{pmatrix}a&b\\c&d\end{pmatrix}:ad-bc=1\right\},
+\qquad f_M(z)=\frac{az+b}{cz+d}.
+\]
+\end{definition}
+\begin{theorem}
+$\Aut(\HH)=\{f_M:M\in\mathrm{SL}_2(\RR)\}$. The Cayley map conjugates
+these transformations to the automorphisms of $\DD$.
+\end{theorem}
+
+\chapter{The Riemann mapping theorem}
+\lecturedetails{October 23, 2025}{360--386}
+\begin{theorem}[Riemann mapping]
+Every simply connected region $\Omega\ne\CC$ is conformally equivalent
+to $\DD$.
+\end{theorem}
+\src{362--375}
+\begin{lemma}
+Every open set $\Omega\subset\CC$ admits compact sets $K_n\subset\Omega$
+with $K_n\subset\operatorname{int}K_{n+1}$ and $\bigcup_nK_n=\Omega$.
+\end{lemma}
+\begin{lemma}[Hurwitz]
+If $f_n\in H(\Omega)$ converge uniformly on compact subsets to $f$,
+and each $f_n$ is zero-free, then $f$ is zero-free or identically zero.
+\end{lemma}
+\begin{definition}
+A family $\mathcal F\subset H(\Omega)$ is normal if every sequence in
+it has a subsequence converging uniformly on compact subsets to a
+holomorphic function or to infinity.
+\end{definition}
+\begin{theorem}[Montel]
+Every locally uniformly bounded family of holomorphic functions is normal.
+\end{theorem}
+\src{376--386}
+The proof of the mapping theorem uses the family
+\[
+\Sigma=\{\psi\in H(\Omega):\psi\text{ one-to-one and }\psi(\Omega)\subset\DD\},
+\]
+normality, maximization of $|\psi'(z_0)|$, disc automorphisms,
+and Schwarz's lemma. The extremal map is onto $\DD$.
+
+\chapter{Runge's theorem and approximation}
+\lecturedetails{October 27, 2025}{387--416}
+\src{389--397}
+\begin{definition}
+A rational function is $P/Q$ for polynomials $P,Q$, $Q\not\equiv0$.
+Its poles are the zeros of $Q$ after cancellation.
+\end{definition}
+\begin{theorem}[Cauchy theorem for compact sets]
+For a compact $K$ and an open neighborhood $\Omega$, a finite balanced
+collection of oriented grid intervals gives a cycle whose index is one
+on $K$ and zero outside $\Omega$.
+\end{theorem}
+\begin{theorem}[Runge]
+Let $K\subset\CC$ be compact and choose one point $\alpha_j$ in each
+component of $\widehat\CC\setminus K$. If $\Omega\supset K$ is open and
+$f\in H(\Omega)$, then $f$ is uniformly approximated on $K$ by rational
+functions with poles among the $\alpha_j$.
+\end{theorem}
+\src{403--408}
+\begin{corollary}[Polynomial approximation]
+If $\widehat\CC\setminus K$ is connected, every function holomorphic
+near $K$ is uniformly approximated on $K$ by polynomials.
+\end{corollary}
+\begin{remark}
+Connectedness of the complement is necessary: holes require poles
+in the complementary components.
+\end{remark}
+\src{409--411}
+\begin{theorem}[Mittag--Leffler]
+Given a discrete set of points and prescribed principal parts there,
+there exists a meromorphic function with exactly those principal parts.
+\end{theorem}
+\src{412--416}
+\begin{theorem}[Characterizations of simple connectivity]
+For a region $\Omega$, the following conditions are equivalent:
+\begin{enumerate}
+\item $\Omega$ is conformally equivalent to $\DD$.
+\item $\Omega$ is simply connected.
+\item Every holomorphic function on $\Omega$ has a primitive.
+\item Every nonvanishing holomorphic function has a logarithm.
+\item Every nonvanishing holomorphic function has a holomorphic square root.
+\item Every holomorphic function near compact subsets is approximable by polynomials.
+\end{enumerate}
+\end{theorem}
+
+\chapter{Harmonic functions}
+\lecturedetails{October 30, 2025}{417--456}
+\begin{theorem}[Cauchy--Riemann in Wirtinger form]
+\[
+\partial_x f=\frac1i\,\partial_y f.
+\]
+\end{theorem}
+\begin{definition}
+A real function $u$ is harmonic when $u_{xx}+u_{yy}=0$.
+\end{definition}
+\begin{theorem}
+The real and imaginary parts of a holomorphic function are harmonic.
+A harmonic function vanishing on a nonempty open subset of a region
+vanishes throughout that region.
+\end{theorem}
+\begin{definition}
+If $u$ is harmonic, $v$ is a harmonic conjugate when $u+iv$ is holomorphic;
+equivalently $u_x=v_y$ and $u_y=-v_x$.
+\end{definition}
+\begin{theorem}
+Every harmonic function on a disc has a harmonic conjugate. A region is
+simply connected exactly when every harmonic function on it has one.
+\end{theorem}
+\begin{definition}
+Continuous $u$ has the mean-value property if
+\[
+u(a)=\frac1{2\pi}\int_0^{2\pi}u(a+re^{i\theta})\,d\theta
+\]
+whenever the closed disc is contained in the region.
+\end{definition}
+\begin{theorem}
+An $MVP$ function satisfies the maximum principle; a nonconstant one
+cannot attain an interior maximum or minimum. Conversely, a continuous
+$MVP$ function is harmonic.
+\end{theorem}
+\begin{definition}
+\[
+P_r(\theta)=\Re\frac{1+re^{i\theta}}{1-re^{i\theta}}
+=\frac{1-r^2}{1-2r\cos\theta+r^2}.
+\]
+\end{definition}
+\begin{theorem}[Dirichlet problem for a disc]
+For continuous real boundary data $f$ on $C(a,\rho)$ there is a unique
+continuous harmonic $u$ on the closed disc with $u=f$ on its boundary,
+given by the Poisson integral
+\[
+u(a+re^{i\theta})=\frac1{2\pi}\int_{-\pi}^{\pi}
+P_{r/\rho}(\theta-\varphi)f(a+\rho e^{i\varphi})\,d\varphi.
+\]
+\end{theorem}
+
+\chapter{Infinite products}
+\lecturedetails{November 3, 2025}{457--494}
+\begin{theorem}[Jensen]
+If $f$ is holomorphic near $\overline{D(0,R)}$, $f(0)\ne0$, and
+$a_1,\ldots,a_N$ are its zeros in the disc, counted with multiplicity,
+\[
+\log|f(0)|+\sum_{j=1}^N\log\frac R{|a_j|}
+=\frac1{2\pi}\int_0^{2\pi}\log|f(Re^{i\theta})|\,d\theta.
+\]
+\end{theorem}
+\begin{definition}
+An entire function has order at most $\rho$ if
+$|f(z)|\le Ae^{B|z|^\rho}$ for suitable $A,B$.
+\end{definition}
+\begin{theorem}
+An entire function of order at most $\rho$ has at most $Cr^\rho$
+zeros in $|z|\le r$ for large $r$.
+\end{theorem}
+\begin{definition}
+An infinite product $\prod(1+a_n)$ converges if its partial products
+converge to a nonzero limit. If $\sum|a_n|<\infty$, it does.
+\end{definition}
+\begin{lemma}
+If $|z|<1/2$, then $|\log(1+z)|\le2|z|$.
+\end{lemma}
+\begin{theorem}[Weierstrass product]
+For every sequence $|a_n|\to\infty$, an entire function exists whose
+zeros are exactly the prescribed $a_n$, with prescribed multiplicities.
+\end{theorem}
+\begin{definition}
+\[
+E_0(z)=1-z,\qquad
+E_k(z)=(1-z)\exp\left(z+\frac{z^2}{2}+\cdots+\frac{z^k}{k}\right).
+\]
+\end{definition}
+\begin{theorem}[Hadamard factorization]
+An entire function of finite order factors as a polynomial times
+canonical factors $E_k(z/a_n)$ and an exponential factor of bounded degree.
+\end{theorem}
+
+\chapter{Gamma function and summation}
+\lecturedetails{November 10, 2025}{495--549}
+\begin{theorem}
+\[
+\sin\pi z=\pi z\prod_{n=1}^{\infty}\left(1-\frac{z^2}{n^2}\right).
+\]
+\end{theorem}
+\begin{definition}
+\[
+\Gamma(z)=\frac{e^{-\gamma z}}{z}\prod_{n=1}^{\infty}
+\left(1+\frac zn\right)^{-1}e^{z/n}.
+\]
+\end{definition}
+\begin{theorem}[Euler's functional equation]
+\[
+\Gamma(z+1)=z\Gamma(z),\qquad\Gamma(n+1)=n!.
+\]
+\end{theorem}
+\begin{theorem}[Reflection and duplication]
+\[
+\Gamma(z)\Gamma(1-z)=\frac{\pi}{\sin\pi z},\qquad
+\Gamma(2z)\Gamma(1/2)=2^{2z-1}\Gamma(z)\Gamma(z+1/2).
+\]
+\end{theorem}
+\begin{theorem}[Integral representation]
+For $\Re z>0$, $\Gamma(z)=\int_0^\infty e^{-t}t^{z-1}\,dt$.
+\end{theorem}
+\begin{definition}
+\[
+\frac{ze^{xz}}{e^z-1}=\sum_{k=0}^{\infty}B_k(x)\frac{z^k}{k!}.
+\]
+\end{definition}
+\begin{theorem}[Euler--Maclaurin]
+\[
+\sum_{n=a}^{b}f(n)=\int_a^bf(x)\,dx+\frac{f(a)+f(b)}2+
+\sum_{r=2}^{q}\frac{B_r}{r!}(f^{(r-1)}(b)-f^{(r-1)}(a))+R_q.
+\]
+\end{theorem}
+\begin{theorem}[Stirling]
+\[
+\Gamma(z)=\sqrt{2\pi}\,z^{z-1/2}e^{-z}(1+O(1/z))
+\]
+in sectors $|\arg z|\le\pi-\delta$.
+\end{theorem}
+
+\chapter{Dirichlet series}
+\lecturedetails{November 13, 2025}{550--594}
+\begin{definition}
+\[
+D(s)=\sum_{n=1}^{\infty}a_n n^{-s},\qquad s=\sigma+it.
+\]
+\end{definition}
+\begin{theorem}
+There are abscissae $\sigma_a$ and $\sigma_c$ of absolute convergence
+and convergence. In every strict half-plane $\sigma>\sigma_c$, $D$
+is holomorphic and may be differentiated term by term.
+\end{theorem}
+\begin{lemma}
+The coefficients of a Dirichlet series are uniquely determined by the
+function in a half-plane of convergence.
+\end{lemma}
+\begin{definition}
+A function $f$ is multiplicative when $f(mn)=f(m)f(n)$ for coprime $m,n$.
+\end{definition}
+\begin{theorem}[Euler product]
+\[
+\sum_{n\ge1}\frac{f(n)}{n^s}
+=\prod_p\left(\sum_{k\ge0}\frac{f(p^k)}{p^{ks}}\right)
+\]
+under the source's convergence hypotheses.
+\end{theorem}
+\begin{theorem}
+Products of Dirichlet series correspond to Dirichlet convolution of
+their coefficients, with absolute convergence justifying rearrangement.
+\end{theorem}
+
+\chapter{The zeta function and the prime number theorem}
+\lecturedetails{November 17, 2025}{595--631}
+\begin{definition}
+\[
+\Lambda(n)=\begin{cases}\log p,&n=p^k,\\0,&\text{otherwise},\end{cases}
+\quad\psi(x)=\sum_{n\le x}\Lambda(n),\quad
+\vartheta(x)=\sum_{p\le x}\log p.
+\]
+\end{definition}
+\begin{theorem}[Chebyshev bounds]
+\[
+\vartheta(x)\le x\log4,\qquad\psi(x)\asymp x.
+\]
+\end{theorem}
+\begin{definition}
+\[
+\zeta(s)=\sum_{n=1}^{\infty}n^{-s}
+=\prod_p(1-p^{-s})^{-1}\quad(\Re s>1).
+\]
+\end{definition}
+\begin{theorem}[Analytic continuation and functional equation]
+\[
+\xi(s)=s(s-1)\pi^{-s/2}\Gamma(s/2)\zeta(s)
+\]
+extends to an entire function and satisfies $\xi(s)=\xi(1-s)$.
+\end{theorem}
+\begin{remark}
+The trivial zeros are $-2,-4,-6,\ldots$; $\zeta$ has no zeros for
+$\Re s>1$, and the nontrivial zeros lie in $0\le\Re s\le1$.
+\end{remark}
+\begin{theorem}[Explicit formula]
+\[
+\psi(x)=x-\sum_\rho\frac{x^\rho}{\rho}
+-\log(2\pi)-\frac12\log(1-x^{-2})
+\text{the source's limiting correction}.
+\]
+\end{theorem}
+\begin{theorem}[Prime number theorem]
+\[
+\psi(x)=x+O\!\left(xe^{-c\sqrt{\log x}}\right).
+\]
+\end{theorem}
+\begin{conjecture}[Riemann hypothesis]
+Every nontrivial zero of $\zeta$ has real part $1/2$.
+\end{conjecture}
+\begin{theorem}[Riemann--von Mangoldt]
+\[
+N(T)=\frac{T}{2\pi}\log\frac{T}{2\pi}-\frac{T}{2\pi}+O(\log T).
+\]
+\end{theorem}
+
+\chapter{Quantitative estimates for the prime number theorem}
+\lecturedetails{November 20, 2025}{632--693}
+\begin{lemma}
+The logarithmic derivative $\zeta'/\zeta$ admits a renormalized
+partial-fraction expansion in terms of the zeros, with absolute
+convergence in bounded vertical strips away from zeros and gamma poles.
+\end{lemma}
+\begin{theorem}[Zero-free region]
+There is $C>0$ such that $\zeta(s)$ has no zero
+\[
+\rho=\beta+i\gamma,\qquad
+\beta\ge1-\frac{C}{\log(|\gamma|+3)}.
+\]
+\end{theorem}
+\begin{lemma}[Perron kernel]
+\[
+\frac1{2\pi i}\int_{\kappa-iT}^{\kappa+iT}\frac{x^s}{s}\,ds
+\]
+is $1$ for $x>1$, $0$ for $0<x<1$, and has the half-value at $x=1$,
+up to an error controlled by $x^\kappa/(1+T|\log x|)$.
+\end{lemma}
+\begin{theorem}[Truncated Perron formula]
+For a Dirichlet series, the finite-height Perron integral recovers
+the summatory function with the explicit truncation error displayed
+in the source lecture.
+\end{theorem}
+\begin{theorem}[Landau explicit formula]
+\[
+\psi(x)=x-\sum_{|\gamma|\le T}\frac{x^\rho}{\rho}
+-\log(2\pi)-\frac12\log(1-x^{-2})+\text{truncation error}.
+\]
+\end{theorem}
+\begin{theorem}[Korobov--Vinogradov]
+There is $C>0$ such that no zero lies in
+\[
+\sigma\ge1-\frac{C}{(\log(|t|+3))^{2/3}
+(\log\log(|t|+3))^{1/3}}.
+\]
+\end{theorem}
+\begin{remark}
+The source obtains its best stated PNT error term by inserting this
+zero-free region into Perron's formula.
+\end{remark}
+
+\end{document}
