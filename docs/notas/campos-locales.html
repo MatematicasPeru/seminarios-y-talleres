@@ -162,18 +162,44 @@
       font-size: .84rem;
     }
 
+    .viewer-controls {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+
+    .viewer-controls button,
+    .viewer-controls select {
+      min-height: 2rem;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      background: var(--white);
+      font: inherit;
+    }
+
+    .viewer-controls button {
+      width: 2rem;
+      font-size: 1.15rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .viewer-controls button:hover,
+    .viewer-controls select:hover { border-color: var(--teal); color: var(--teal); }
+
+    .viewer-controls select { padding: 0 .35rem; cursor: pointer; }
+
     .pdf-pages {
       padding: 1.4rem;
       background: #d9d7d0;
     }
 
     .pdf-page {
-      display: grid;
-      place-items: center;
       max-width: 940px;
       min-height: 160px;
       margin: 0 auto 1.25rem;
-      overflow: hidden;
+      overflow: auto;
       background: var(--white);
       box-shadow: 0 3px 12px rgba(39, 35, 28, .18);
     }
@@ -182,7 +208,7 @@
 
     .pdf-page canvas {
       display: block;
-      max-width: 100%;
+      margin: 0 auto;
       height: auto;
     }
 
@@ -209,6 +235,7 @@
       .brand strong { font-size: .95rem; }
       .heading { display: block; }
       .actions { margin-top: 1rem; }
+      .viewer-toolbar { align-items: flex-start; flex-wrap: wrap; }
       .pdf-pages { padding: .75rem; }
     }
   </style>
@@ -257,6 +284,21 @@
 
     <div class="viewer">
       <div class="viewer-toolbar">
+        <div class="viewer-controls" aria-label="PDF zoom controls">
+          <button type="button" id="zoom-out" aria-label="Zoom out">−</button>
+          <select id="zoom-level" aria-label="Zoom level">
+            <option value="50">50%</option>
+            <option value="75">75%</option>
+            <option value="90">90%</option>
+            <option value="100" selected>100%</option>
+            <option value="110">110%</option>
+            <option value="125">125%</option>
+            <option value="150">150%</option>
+            <option value="175">175%</option>
+            <option value="200">200%</option>
+          </select>
+          <button type="button" id="zoom-in" aria-label="Zoom in">+</button>
+        </div>
         <span id="page-count"><span class="es">Cargando PDF…</span><span class="en">Loading PDF…</span></span>
         <span><span class="es">Desplázate para leer</span><span class="en">Scroll to read</span></span>
       </div>
@@ -297,8 +339,12 @@
       const pdfUrl = "campos-locales.pdf";
       const pages = document.getElementById("pdf-pages");
       const pageCount = document.getElementById("page-count");
+      const zoomLevel = document.getElementById("zoom-level");
+      const zoomSteps = [50, 75, 90, 100, 110, 125, 150, 175, 200];
       const rendered = new Set();
       let pdf;
+      let observer;
+      let zoomPercent = 100;
 
       pdfjsLib.GlobalWorkerOptions.workerSrc =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
@@ -316,7 +362,8 @@
           const page = await pdf.getPage(pageNumber);
           const baseViewport = page.getViewport({ scale: 1 });
           const availableWidth = Math.min(pages.clientWidth - 32, 920);
-          const scale = Math.min(1.45, availableWidth / baseViewport.width);
+          const fitWidthScale = Math.min(1.45, availableWidth / baseViewport.width);
+          const scale = fitWidthScale * (zoomPercent / 100);
           const viewport = page.getViewport({ scale: scale });
           const outputScale = Math.min(window.devicePixelRatio || 1, 2);
           const canvas = document.createElement("canvas");
@@ -342,6 +389,46 @@
         }
       }
 
+      function placeholder(holder) {
+        const number = holder.dataset.page;
+        holder.innerHTML = '<p class="loading">' + visibleText(
+          "Página " + number,
+          "Page " + number
+        ) + '</p>';
+      }
+
+      function refreshVisiblePages() {
+        rendered.clear();
+        document.querySelectorAll(".pdf-page").forEach(function (holder) {
+          placeholder(holder);
+          const rect = holder.getBoundingClientRect();
+          if (rect.bottom > -900 && rect.top < window.innerHeight + 900) {
+            renderPage(holder);
+          }
+        });
+      }
+
+      function setZoom(nextPercent) {
+        zoomPercent = Math.max(50, Math.min(200, nextPercent));
+        zoomLevel.value = String(zoomPercent);
+        localStorage.setItem("seminarios-pdf-zoom", String(zoomPercent));
+        if (pdf) refreshVisiblePages();
+      }
+
+      document.getElementById("zoom-out").addEventListener("click", function () {
+        const index = Math.max(0, zoomSteps.indexOf(zoomPercent) - 1);
+        setZoom(zoomSteps[index]);
+      });
+
+      document.getElementById("zoom-in").addEventListener("click", function () {
+        const index = Math.min(zoomSteps.length - 1, zoomSteps.indexOf(zoomPercent) + 1);
+        setZoom(zoomSteps[index]);
+      });
+
+      zoomLevel.addEventListener("change", function () {
+        setZoom(Number(zoomLevel.value));
+      });
+
       async function startReader() {
         try {
           pdf = await pdfjsLib.getDocument(pdfUrl).promise;
@@ -351,7 +438,7 @@
           );
 
           pages.replaceChildren();
-          const observer = new IntersectionObserver(function (entries) {
+          observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
               if (entry.isIntersecting) renderPage(entry.target);
             });
@@ -361,10 +448,7 @@
             const holder = document.createElement("div");
             holder.className = "pdf-page";
             holder.dataset.page = number;
-            holder.innerHTML = '<p class="loading">' + visibleText(
-              "Página " + number,
-              "Page " + number
-            ) + '</p>';
+            placeholder(holder);
             pages.appendChild(holder);
             observer.observe(holder);
           }
@@ -377,6 +461,8 @@
         }
       }
 
+      const savedZoom = Number(localStorage.getItem("seminarios-pdf-zoom"));
+      if (zoomSteps.includes(savedZoom)) setZoom(savedZoom);
       startReader();
     }());
   </script>
