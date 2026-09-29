@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#211d19">
+  <meta name="description" content="Notas, seminarios y talleres de Matemáticas Perú.">
+  <title>Matemáticas Perú</title>
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+  <header><div class="shell topbar">
+    <a class="brand" href="index.html">Matemáticas Perú<small>UNI · Notas &amp; seminarios</small></a>
+    <nav class="nav" aria-label="Navigation">
+      <a href="#notas" data-es="Notas" data-en="Notes">Notas</a>
+      <a href="#seminarios" data-es="Encuentros" data-en="Meetings">Encuentros</a>
+      <button class="language" id="lang" aria-label="Switch to English">EN</button>
+    </nav>
+  </div></header>
+  <main class="shell home">
+    <div class="home-intro">
+      <h1 data-es="Inicio" data-en="Home">Inicio</h1>
+      <p data-es="Un lugar para estudiar matemáticas en común." data-en="A place to study mathematics together.">Un lugar para estudiar matemáticas en común.</p>
+    </div>
+    <div class="home-columns">
+      <section class="home-section" id="notas">
+        <h2 data-es="Notas" data-en="Notes">Notas</h2>
+        <ul class="reading-list">
+          <li><a href="notas/teoria-de-la-medida.html"><span data-es="Teoría de la medida" data-en="Measure theory">Teoría de la medida</span><small>PDF ↗</small></a></li>
+          <li><a href="notas/campos-locales.html"><span data-es="Campos locales" data-en="Local fields">Campos locales</span><small>PDF ↗</small></a></li>
+          <li><a href="notas/complex-analysis.html"><span data-es="Análisis complejo" data-en="Complex analysis">Análisis complejo</span><small>PDF ↗</small></a></li>
+          <li><a href="notas/dessins-denfants.html"><span>Dessins d’enfants</span><small>WEB ↗</small></a></li>
+        </ul>
+      </section>
+      <div>
+        <section class="home-section" id="seminarios">
+          <span id="talleres"></span>
+          <h2 data-es="Seminarios & talleres" data-en="Seminars & workshops">Seminarios &amp; talleres</h2>
+          <p class="muted" data-es="Próximos encuentros, aquí." data-en="Upcoming meetings, here.">Próximos encuentros, aquí.</p>
+        </section>
+        <section class="daily" aria-label="Theorem of the day">
+          <h2 data-es="Teorema del día" data-en="Theorem of the day">Teorema del día</h2>
+          <p id="daily-title"></p>
+          <details><summary data-es="Enunciado" data-en="Statement">Enunciado</summary><p id="daily-statement"></p></details>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer><div class="shell">© 2026 Matemáticas Perú · <span data-es="Iniciativa estudiantil independiente." data-en="Independent student initiative.">Iniciativa estudiantil independiente.</span></div></footer>
+  <script>
+    // A small, explicit rotation of statements; the existing theorems.js archive is retained.
+    const daily = [
+      {es:'Bolzano–Weierstrass',en:'Bolzano–Weierstrass',s:'Toda sucesión acotada de números reales tiene una subsucesión convergente.',e:'Every bounded sequence of real numbers has a convergent subsequence.'},
+      {es:'Teorema de Liouville',en:'Liouville’s theorem',s:'Toda función entera y acotada es constante.',e:'Every bounded entire function is constant.'},
+      {es:'Teorema de la convergencia monótona',en:'Monotone convergence theorem',s:'Si una sucesión creciente de funciones medibles no negativas converge puntualmente a f, sus integrales convergen a la integral de f, permitiendo el valor infinito.',e:'If an increasing sequence of nonnegative measurable functions converges pointwise to f, its integrals converge to the integral of f, allowing infinity.'},
+      {es:'Teorema de Belyi',en:'Belyi’s theorem',s:'Una curva compleja proyectiva, lisa y conexa admite un modelo sobre los números algebraicos si y solo si admite un morfismo no constante a la recta proyectiva ramificado únicamente sobre 0, 1 e infinito.',e:'A smooth connected complex projective curve has a model over the algebraic numbers if and only if it admits a nonconstant morphism to the projective line branched only over 0, 1, and infinity.'}
+    ];
+    let language='es';try{language=localStorage.getItem('seminarios-language')==='en'?'en':'es'}catch{}
+    function showDay(){const d=new Date();const n=Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000);const item=daily[n%daily.length];document.querySelector('#daily-title').textContent=item[language];document.querySelector('#daily-statement').textContent=item[language==='es'?'s':'e'];}
+    function setLanguage(){document.documentElement.lang=language;document.querySelectorAll('[data-es]').forEach(e=>e.textContent=e.dataset[language]);const b=document.querySelector('#lang');b.textContent=language==='es'?'EN':'ES';b.setAttribute('aria-label',language==='es'?'Switch to English':'Cambiar a español');try{localStorage.setItem('seminarios-language',language)}catch{}showDay()}
+    document.querySelector('#lang').onclick=()=>{language=language==='es'?'en':'es';setLanguage()};setLanguage();setInterval(showDay,60000);
+  </script>
+</body>
+</html>
